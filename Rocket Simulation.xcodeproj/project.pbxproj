@@ -17,6 +17,10 @@
 		49B355DE213F5CDF0022C1BB /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 49B355DC213F5CDF0022C1BB /* LaunchScreen.storyboard */; };
 		49B355E9213F5CDF0022C1BB /* Rocket_SimulationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49B355E8213F5CDF0022C1BB /* Rocket_SimulationTests.swift */; };
 		49B355F4213F5CDF0022C1BB /* Rocket_SimulationUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49B355F3213F5CDF0022C1BB /* Rocket_SimulationUITests.swift */; };
+		49C59F5D213F643400CC9DFA /* BuildScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49C59F5C213F643400CC9DFA /* BuildScene.swift */; };
+		49C59F5F213F644F00CC9DFA /* SaveScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49C59F5E213F644F00CC9DFA /* SaveScene.swift */; };
+		49C59F62213F657100CC9DFA /* Part.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49C59F61213F657100CC9DFA /* Part.swift */; };
+		49C59F64213F657E00CC9DFA /* Rocket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49C59F63213F657E00CC9DFA /* Rocket.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -49,10 +53,14 @@
 		49B355DF213F5CDF0022C1BB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		49B355E4213F5CDF0022C1BB /* Rocket SimulationTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Rocket SimulationTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		49B355E8213F5CDF0022C1BB /* Rocket_SimulationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Rocket_SimulationTests.swift; sourceTree = "<group>"; };
-		49B355EA213F5CDF0022C1BB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		49B355EA213F5CDF0022C1BB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Info.plist; path = "Rocket SimulationTests/Info.plist"; sourceTree = SOURCE_ROOT; };
 		49B355EF213F5CDF0022C1BB /* Rocket SimulationUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Rocket SimulationUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		49B355F3213F5CDF0022C1BB /* Rocket_SimulationUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Rocket_SimulationUITests.swift; sourceTree = "<group>"; };
 		49B355F5213F5CDF0022C1BB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		49C59F5C213F643400CC9DFA /* BuildScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BuildScene.swift; sourceTree = "<group>"; };
+		49C59F5E213F644F00CC9DFA /* SaveScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveScene.swift; sourceTree = "<group>"; };
+		49C59F61213F657100CC9DFA /* Part.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Part.swift; sourceTree = "<group>"; };
+		49C59F63213F657E00CC9DFA /* Rocket.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Rocket.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -104,9 +112,13 @@
 			isa = PBXGroup;
 			children = (
 				49B355CD213F5CDD0022C1BB /* AppDelegate.swift */,
+				49C59F60213F654E00CC9DFA /* Rocket */,
 				49B355CF213F5CDD0022C1BB /* GameScene.sks */,
 				49B355D1213F5CDD0022C1BB /* Actions.sks */,
 				49B355D3213F5CDD0022C1BB /* GameScene.swift */,
+				49C59F5E213F644F00CC9DFA /* SaveScene.swift */,
+				49B355EA213F5CDF0022C1BB /* Info.plist */,
+				49C59F5C213F643400CC9DFA /* BuildScene.swift */,
 				49B355D5213F5CDD0022C1BB /* GameViewController.swift */,
 				49B355D7213F5CDD0022C1BB /* Main.storyboard */,
 				49B355DA213F5CDF0022C1BB /* Assets.xcassets */,
@@ -120,7 +132,6 @@
 			isa = PBXGroup;
 			children = (
 				49B355E8213F5CDF0022C1BB /* Rocket_SimulationTests.swift */,
-				49B355EA213F5CDF0022C1BB /* Info.plist */,
 			);
 			path = "Rocket SimulationTests";
 			sourceTree = "<group>";
@@ -132,6 +143,15 @@
 				49B355F5213F5CDF0022C1BB /* Info.plist */,
 			);
 			path = "Rocket SimulationUITests";
+			sourceTree = "<group>";
+		};
+		49C59F60213F654E00CC9DFA /* Rocket */ = {
+			isa = PBXGroup;
+			children = (
+				49C59F61213F657100CC9DFA /* Part.swift */,
+				49C59F63213F657E00CC9DFA /* Rocket.swift */,
+			);
+			path = Rocket;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -267,9 +287,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				49C59F64213F657E00CC9DFA /* Rocket.swift in Sources */,
 				49B355D4213F5CDD0022C1BB /* GameScene.swift in Sources */,
+				49C59F5D213F643400CC9DFA /* BuildScene.swift in Sources */,
 				49B355D6213F5CDD0022C1BB /* GameViewController.swift in Sources */,
 				49B355CE213F5CDD0022C1BB /* AppDelegate.swift in Sources */,
+				49C59F62213F657100CC9DFA /* Part.swift in Sources */,
+				49C59F5F213F644F00CC9DFA /* SaveScene.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
