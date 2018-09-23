@@ -11,6 +11,11 @@ import GameplayKit
 
 class GameScene: SKScene, SKPhysicsContactDelegate {
     
+    private struct Keys{
+        static let Area = "gameArea"
+        static let GVC = "gvc"
+    }
+    
     var gameArea: CGRect
     let gvc:GameViewController
     let buildLabel = SKLabelNode(fontNamed: "Japanese 3017")
@@ -54,7 +59,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+        self.gameArea = aDecoder.decodeObject(forKey: Keys.Area) as! CGRect
+        self.gvc = aDecoder.decodeObject(forKey: Keys.GVC) as! GameViewController
+        super.init(size: gameArea.size)
+    }
+    
+    override func encode(with aCoder: NSCoder) {
+        aCoder.encode(self.gameArea, forKey: Keys.Area)
+        aCoder.encode(self.gvc, forKey: Keys.GVC)
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -97,8 +109,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     func toSavesMenu(){
-        let changeSceneAction = SKAction.run {self.changeScene(scene: SavesScene(size: self.size, gvc: self.gvc), move: .right)}
-        self.run(changeSceneAction)
+       // let changeSceneAction = SKAction.run {self.changeScene(scene: SavesScene(size: self.size, gvc: self.gvc), move: .right)}
+        //self.run(changeSceneAction)
     }
     
     func changeScene(scene: SKScene, move: SKTransitionDirection){

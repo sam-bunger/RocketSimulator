@@ -31,6 +31,7 @@ class BuildScene: SKScene{
     var isConnection = false
     
     var connectionReady:[Any?] = [1, 2, 3]
+    var found = false;
     
     let rocketItemsButton = SKSpriteNode(imageNamed: "rocketItemsTabButton")
     let itemsTab = SKSpriteNode(imageNamed: "rocketItemsTab")
@@ -139,8 +140,11 @@ class BuildScene: SKScene{
         let playableWidth = size.height / maxAspectRatio
         let margin = (size.width - playableWidth) / 2
         gameArea = CGRect(x: margin, y:0, width: playableWidth, height: size.height)
-        numOfSaves = defaults.integer(forKey: DefaultKeys.saveNum)
+        numOfSaves = 0//defaults.integer(forKey: DefaultKeys.saveNum)
         self.gvc = gvc
+        self.selected = []
+        self.notSelected = []
+        self.list = []
         super.init(size: size)
     }
     
@@ -167,11 +171,28 @@ class BuildScene: SKScene{
                     openItemsMenu()
                 }
                 //SELECT ITEMS
-                for part: Part in list{
+                for part: Part in notSelected{
                     if part.contains(pointOfTouch) && selected.isEmpty{
-                        selected.append(contentsOf: part.select())
-                        part.breakConnection()
+                        print("prev deg: \(part.getDegree())")
+                        if let p1 = part.getParent(){
+                            let temp = part.select(i: p1.getDegree())
+                            selected.append(contentsOf: temp)
+                            for t:Part in temp{
+                                notSelected.remove(at: notSelected.index(of:t)!)
+                            }
+                            part.breakConnection(part: p1)
+                            print("nonroot selected")
+                        }else{
+                            let temp = part.select(i: -1)
+                            selected.append(contentsOf: temp)
+                            for t:Part in temp{
+                                notSelected.remove(at: notSelected.index(of:t)!)
+                            }
+                            print("root selected")
+                        }
                         mainSelect = part
+                        print("next deg: \(part.getDegree())")
+                        print("----------------------")
                     }
                 }
             }
@@ -194,10 +215,11 @@ class BuildScene: SKScene{
                 }
             }
             
-            for i in 1...2{
-                if var side:CGRect = connectionReady[i] as! CGRect{
-                    side.origin.x += amountDraggedX
-                    side.origin.y += amountDraggedY
+            //Allow connection bars to move too
+            if !connectionReady.isEmpty{
+                if let side = connectionReady[2] as? SKShapeNode{
+                    side.position.x += amountDraggedX
+                    side.position.y += amountDraggedY
                 }
             }
             
@@ -239,14 +261,12 @@ class BuildScene: SKScene{
             for part:Part in list{
                 if part.contains(pointOfTouch){
                     if let obj = part as? Cockpit{
-                        let part = Cockpit(type: obj.getType())
+                        let a = Cockpit(type: obj.getType())
+                        add(a: a)
                     }else if let obj = part as? Engine{
-                        let part = Engine(type: obj.getType())
+                        let a = Engine(type: obj.getType())
+                        add(a: a)
                     }
-                    part.center(scene: self)
-                    part.zPosition = CGFloat(notSelected.count) + 1
-                    notSelected.append(part)
-                    self.addChild(part)
                     closeItemsMenu()
                     break
                 }
@@ -270,8 +290,8 @@ class BuildScene: SKScene{
                 if(saveBut.contains(pointOfTouch)){
                     if let main = mainSelect, main.getDegree() == 0{
                         
-                        let newRocket = Rocket(root: main)
-                        gvc.displayAlertAction(rocket: newRocket)
+                        //let newRocket = Rocket(root: main)
+                       // gvc.displayAlertAction(rocket: newRocket)
                     }
                 }
                 if(cancelBut.contains(pointOfTouch)){
@@ -283,38 +303,33 @@ class BuildScene: SKScene{
         //DESELECTING ITEMS
         if(!itemMenuIsOpen && !selected.isEmpty){
             if connectionReady.isEmpty{
-                if let main = mainSelect{
+                if mainSelect != nil{
                     for part:Part in selected{
-                        part.pressed()
                         notSelected.append(part)
                         part.zPosition = CGFloat(notSelected.count) + 1
                     }
                 }
             }else{
-                let partA:Part = connectionReady[2] as! ShipPart
-                let dir2 = (connectionReady[1] as! ConnectionRect).getDirection()
-                let dir1 = (connectionReady[0] as! ConnectionRect).getDirection()
-                makeConnection(part1: partA, part2: mainSelection!, dir1: dir1, dir2: dir2, offset: partA.position.y-(mainSelection?.position.y)!)
-                let directions:[CGFloat] = getDirections(part:partA, dir1: dir1, dir2: dir2)
-                
-                for part:ShipPart in selectedItems{
-                    if partA.alpha == 1 {
-                        part.released()
+                let a:Part = connectionReady[0] as! Part
+                if let main = mainSelect{
+                    main.makeConnection(part: a, at: connectionReady[3] as! Int, offset: 0)
+                    let directions = a.getSnapDist(main: main, dir: connectionReady[3] as! Int)
+                    for part:Part in selected{
+                        if a.alpha == 1 {
+                        }
+                        notSelected.append(part)
+                        part.zPosition = CGFloat(notSelected.count) + 1
+                        
+                        part.position.x += directions[0]
+                        part.position.y += directions[1]
+                        
                     }
-                    buildItems.append(part)
-                    part.zPosition = CGFloat(buildItems.count) + 1
-                    part.position.x += directions[0]
-                    part.position.y += directions[1]
-                    for rect:ConnectionRect in part.getRects(){
-                        rect.position.x += directions[0]
-                        rect.position.y += directions[1]
-                    }
-                    part.centerRootRect()
                 }
             }
             mainSelect = nil
             selected.removeAll()
         }
+        
     }
     
     override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -336,12 +351,40 @@ class BuildScene: SKScene{
             delButFaded = true
         }
         
+        for part:Part in notSelected{
+            part.update()
+        }
         
-        //Detect Potential Connection
+        for part:Part in selected{
+            part.update()
+        }
+        
         if let main = mainSelect{
             for part:Part in notSelected{
-                connectionReady = part.checkProximity(with: main)
+                let arr = part.checkProximity(with: main);
+                if(arr.count > 1){
+                    if(connectionReady.isEmpty){//} || (!(arr[0] as! Part).equals(part: (connectionReady[0] as! Part)) && (arr[3] as! Int) != (connectionReady[3] as! Int))){
+                        
+                        self.addChild(arr[1] as! SKShapeNode)
+                        self.addChild(arr[2] as! SKShapeNode)
+                        connectionReady = arr
+                        
+                        return
+                    }else{
+                        return
+                    }
+                }
             }
+            
+        }
+        if(!connectionReady.isEmpty){
+            if let con = (connectionReady[1] as? SKShapeNode){
+                con.removeFromParent()
+            }
+            if let con = (connectionReady[2] as? SKShapeNode){
+                con.removeFromParent()
+            }
+            connectionReady.removeAll()
         }
         
     }
@@ -428,80 +471,13 @@ class BuildScene: SKScene{
         cancelButLabel.removeFromParent()
     }
     
-    func getDirection(dir1:Int, dir2:Int) -> Int{
-        if(dir1 == 2 && dir2 == 0){
-            return 0
-        }else if(dir1 == 0 && dir2 == 2){
-            return 2
-        }else if(dir1 == 1 && dir2 == 3){
-            return 3
-        }else if(dir1 == 3 && dir2 == 1){
-            return 1
-        }
-        return -1
+    func add(a:Part){
+        a.center(scene: self)
+        a.zPosition = CGFloat(notSelected.count) + 1
+        notSelected.append(a)
+        self.addChild(a)
     }
-    
-    func getDirections(part:ShipPart, dir1:Int, dir2:Int) -> [CGFloat]{
-        
-        let direction = getDirection(dir1: dir1, dir2: dir2)
-        var dirArr:[CGFloat] = [0, 0]
-        
-        switch direction{
-        case 0:
-            dirArr[0] = part.position.x - (mainSelection?.position.x)!
-            dirArr[1] = (part.position.y + part.size.height/2) - ((mainSelection?.position.y)! - ((mainSelection?.size.height)!/2))
-        case 1:
-            //Left to Right
-            dirArr[0] = (part.position.x + part.size.width/2) - ((mainSelection?.position.x)! - ((mainSelection?.size.width)!/2))
-            dirArr[1] = part.position.y - (mainSelection?.position.y)! - (mainSelection?.getConnection(at: 3)?.offset)!
-        case 2:
-            //Bot to Top
-            dirArr[0] = part.position.x - (mainSelection?.position.x)!
-            dirArr[1] = (part.position.y - part.size.height/2) - ((mainSelection?.position.y)! + (mainSelection?.size.height)!/2)
-        case 3:
-            //Right to Left
-            dirArr[0] = (part.position.x - part.size.width/2) - ((mainSelection?.position.x)! + (mainSelection?.size.width)!/2)
-            dirArr[1] = part.position.y - (mainSelection?.position.y)! - (mainSelection?.getConnection(at: 1)?.offset)!
-        default:
-            return dirArr
-        }
-        return dirArr
-    }
-    
-    func makeConnection(part1:ShipPart, part2:ShipPart, dir1:Int, dir2:Int, offset: CGFloat){
-        
-        let con:connection
-        
-        let direction = getDirection(dir1: dir1, dir2: dir2)
-        if(part2.checkIsRoot()){
-            con = connection(connection1: part2, connection2: part1, offset: offset)
-            part1.released()
-        }else{
-            con = connection(connection1: part1, connection2: part2, offset: offset)
-        }
-        switch direction{
-        case 0:
-            //Top to Bot
-            part1.setConnection(con: con, at: 0)
-            part2.setConnection(con: con, at: 2)
-        case 1:
-            //Left to Right
-            part1.setConnection(con: con, at: 1)
-            part2.setConnection(con: con, at: 3)
-        case 2:
-            //Bot to Top
-            part1.setConnection(con: con, at: 2)
-            part2.setConnection(con: con, at: 0)
-        case 3:
-            //Right to Left
-            part1.setConnection(con: con, at: 3)
-            part2.setConnection(con: con, at: 1)
-        default:
-            return
-        }
-        
-    }
-    
+
     func changeScene(scene: SKScene, move: SKTransitionDirection){
         
         scene.scaleMode = self.scaleMode
