@@ -15,22 +15,26 @@ class Rocket: NSObject, NSCoding{
         static let Root = "root"
         static let Size = "size"
         static let Name = "name"
+        static let Stage = "currentStage"
     }
     
     private let root:Part
     private var name:String
     private var size:CGRect
+    private var currentStage:Stage
     
     override init(){
+        self.currentStage = Stage()
         self.root = Cockpit(type: 0)
         self.name = "Untitled Rocket"
         self.size = self.root.calculateAccumulatedFrame()
     }
     
-    init(root:Part, name:String){
+    init(root:Part, name:String, stage:Stage){
         self.root = root
         self.name = name
         self.size = CGRect(x: 0.0, y: 0.0, width: 0.0, height: 0.0)
+        self.currentStage = stage
         super.init()
         self.size = getSize(root: self.root)
     }
@@ -53,6 +57,7 @@ class Rocket: NSObject, NSCoding{
         self.root = aDecoder.decodeObject(forKey: Keys.Root) as! Part
         self.name = aDecoder.decodeObject(forKey: Keys.Name) as! String
         self.size = aDecoder.decodeObject(forKey: Keys.Size) as! CGRect
+        self.currentStage = aDecoder.decodeObject(forKey: Keys.Stage) as! Stage
         super.init()
     }
     
@@ -62,6 +67,16 @@ class Rocket: NSObject, NSCoding{
     
     func getName()->String{
         return self.name
+    }
+    
+    /* ==================================== *
+     * ======= FLIGHT FUNCTIONALITY ======= *
+     * ==================================== */
+    
+    func stage(){
+        if let stage = currentStage.deploy(){
+            currentStage = stage
+        }
     }
 
 }

@@ -110,8 +110,9 @@ class Part:SKSpriteNode{
         self.position = CGPoint(x: scene.size.width/2, y: scene.size.height/2)
     }
     
-    /*
-     *  Make a new connection
+    /* =====================================
+     * ====== BUILDING FUNCTIONALITY =======
+     * =====================================
      */
     func makeConnection(part:Part, at:Int, offset:CGFloat){
         self.offset = offset;
@@ -267,6 +268,14 @@ class Part:SKSpriteNode{
         return r
     }
     
+    /* ==================================== *
+     * ======= FLIGHT FUNCTIONALITY ======= *
+     * ==================================== */
+    
+    func beginTask(){
+        
+    }
+ 
 }
 
 class Cockpit:Part{
@@ -281,18 +290,48 @@ class Cockpit:Part{
         super.init(coder: aDecoder)
     }
     
+    override func beginTask(){
+        
+    }
+    
 }
 
 class Engine:Part{
     
+    private var fuel:Int
+    
     init(type:Int){
+        self.fuel = 0
         super.init(imageName: "engine\(type)", type: type)
+        setStats(t: self.getType())
         self.setScale(1)
         self.zPosition = 2
     }
     
     required init?(coder aDecoder: NSCoder) {
+        self.fuel = 0
         super.init(coder: aDecoder)
+        setStats(t: self.getType())
+    }
+    
+    func setStats(t:Int){
+        switch t{
+        case 1:
+            self.fuel = 1000
+            break
+        case 2:
+            self.fuel = 10000
+            break
+        case 3:
+            self.fuel = 100000
+            break
+        default:
+            break
+        }
+    }
+    
+    override func beginTask(){
+        
     }
     
 }
