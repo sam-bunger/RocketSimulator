@@ -296,9 +296,40 @@ class Cockpit:Part{
     
 }
 
+class Decoupler:Part{
+    
+    private let stageItem = SKSpriteNode(imageNamed: "decouplerStage");
+    
+    init(type:Int){
+        super.init(imageName: "decoupler\(type)", type: type)
+        setStats(t: self.getType())
+        self.setScale(1)
+        self.zPosition = 2
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        setStats(t: self.getType())
+    }
+    
+    func setStats(t:Int){
+
+    }
+    
+    func getStageItem()->SKSpriteNode{
+        return stageItem
+    }
+    
+    override func beginTask(){
+        
+    }
+    
+}
+
 class Engine:Part{
     
     private var fuel:Int
+    private let stageItem = SKSpriteNode(imageNamed: "engineStage");
     
     init(type:Int){
         self.fuel = 0
@@ -328,6 +359,10 @@ class Engine:Part{
         default:
             break
         }
+    }
+    
+    func getStageItem()->SKSpriteNode{
+        return stageItem
     }
     
     override func beginTask(){

@@ -49,12 +49,15 @@ class Stage:NSObject, NSCoding{
         tasks.remove(at: tasks.index(of: task)!)
     }
     
+    func getTasks()->[Part]{
+        return tasks
+    }
+    
     func deploy()->Stage?{
         for task in tasks{
             task.beginTask()
         }
         return self.nextStage
     }
-    
     
 }

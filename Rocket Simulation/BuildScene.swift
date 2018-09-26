@@ -21,13 +21,21 @@ class BuildScene: SKScene{
     var delButEnlarged = false
     var saveButEnlarged = false
     
+    //SELECTION LIST
     var mainSelect:Part?
     var selected:[Part]
     var notSelected:[Part]
+    
+    //ITEM LIST
     var list:[Part]
+    
+    //STAGE LIST
+    var stages:[Stage]
+    var stageImgs:[[[SKSpriteNode]]] = [[[]]]
     
     var itemMenuIsOpen = false
     var saveMenuIsOpen = false
+    var stageMenuIsOpen = false
     var isConnection = false
     
     var connectionReady:[Any?] = [1, 2, 3]
@@ -40,6 +48,9 @@ class BuildScene: SKScene{
     let saveTab = SKSpriteNode(imageNamed: "save")
     let dim = SKSpriteNode(imageNamed: "dimmed")
     
+    //Stage-Related Sprites
+    let stagesBut = SKSpriteNode(imageNamed: "stageButton")
+    
     let saveRect = SKShapeNode(rectOf: CGSize(width: 900, height: 600), cornerRadius: 20)
     let saveBut = SKShapeNode(rectOf: CGSize(width: 275, height: 150), cornerRadius: 10)
     let cancelBut = SKShapeNode(rectOf: CGSize(width: 275, height: 150), cornerRadius: 10)
@@ -50,6 +61,7 @@ class BuildScene: SKScene{
     
     let deleteTabScale = CGFloat(0.3)
     let saveTabScale = CGFloat(0.057)
+    let stageScale = CGFloat(0.5)
     
     override func didMove(to view: SKView) {
         
@@ -84,6 +96,13 @@ class BuildScene: SKScene{
         saveTab.zPosition = 1
         saveTab.alpha = 0.1
         self.addChild(saveTab)
+        
+        //stages button
+        stagesBut.setScale(stageScale)
+        stagesBut.position = CGPoint(x: gameArea.origin.x + gameArea.size.width*0.1, y: gameArea.size.height*0.1)
+        stagesBut.zPosition = 1
+        stagesBut.alpha = 0.1
+        self.addChild(stagesBut)
         
         //BACKGROUND DIMMER
         dim.setScale(1)
@@ -145,6 +164,7 @@ class BuildScene: SKScene{
         self.selected = []
         self.notSelected = []
         self.list = []
+        self.stages = []
         super.init(size: size)
     }
     
@@ -164,12 +184,21 @@ class BuildScene: SKScene{
                 }
             }
             
+            if(stageMenuIsOpen){
+                if(background.contains(pointOfTouch) && !itemsTab.contains(pointOfTouch)){
+                    closeStageMenu()
+                }
+            }
+            
             //When the menu is closed
             if(!itemMenuIsOpen && !saveMenuIsOpen){
                 //OPEN MENU
                 if(rocketItemsButton.contains(pointOfTouch)){
                     openItemsMenu()
                 }
+                
+                
+                
                 //SELECT ITEMS
                 for part: Part in notSelected{
                     if part.contains(pointOfTouch) && selected.isEmpty{
@@ -197,6 +226,7 @@ class BuildScene: SKScene{
                 }
             }
         }
+        
     }
     
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -404,7 +434,6 @@ class BuildScene: SKScene{
             cockpit.position = CGPoint(x: x, y: gameArea.size.height - (yDistribution * CGFloat(counter)))
             cockpit.zPosition = 100
             cockpit.setScale(1)
-            self.addChild(cockpit)
             list.append(cockpit)
         }
         
@@ -416,7 +445,6 @@ class BuildScene: SKScene{
             engine.position = CGPoint(x: x, y: gameArea.size.height - (yDistribution * CGFloat(counter)))
             engine.zPosition = 100
             engine.setScale(1)
-            self.addChild(engine)
             list.append(engine)
         }
         
@@ -428,6 +456,7 @@ class BuildScene: SKScene{
         itemsTab.run(moveRight)
         rocketItemsButton.run(moveRight)
         for parts in list{
+            self.addChild(parts)
             parts.run(moveRight)
         }
     }
@@ -438,6 +467,7 @@ class BuildScene: SKScene{
         itemsTab.run(moveLeft)
         rocketItemsButton.run(moveLeft)
         for parts in list{
+            parts.removeFromParent()
             parts.run(moveLeft)
         }
     }
@@ -471,6 +501,24 @@ class BuildScene: SKScene{
         cancelButLabel.removeFromParent()
     }
     
+    func openStageMenu(){
+        stageMenuIsOpen = true
+        let moveRight = SKAction.moveBy(x: 400, y: 0, duration: 0.2)
+        itemsTab.run(moveRight)
+        stagesBut.run(moveRight)
+    }
+    
+    func closeStageMenu(){
+        stageMenuIsOpen = false
+        for stage in stages{
+            for task in stage.getTasks(){
+                if let t = task as? Engine{
+                    t.getStageItem().removeFromParent()
+                }
+            }
+        }
+    }
+    
     func add(a:Part){
         a.center(scene: self)
         a.zPosition = CGFloat(notSelected.count) + 1
@@ -483,6 +531,27 @@ class BuildScene: SKScene{
         scene.scaleMode = self.scaleMode
         let myTransition = SKTransition.push(with: move, duration: 0.5)
         self.view!.presentScene(scene, transition: myTransition)
+        
+    }
+    
+    func buildStage(){
+        
+        for stage in stages{
+        
+            var engines:[SKSpriteNode] = []
+            var decouplers:[SKSpriteNode] = []
+            
+            for task in stage.getTasks(){
+                if let t = task as? Engine{
+                    engines.append(t.getStageItem())
+                }else if let t = task as? Decoupler{
+                    decouplers.append(t.getStageItem())
+                }
+            }
+            
+            stageImgs.append([engines, decouplers])
+            
+        }
         
     }
     
