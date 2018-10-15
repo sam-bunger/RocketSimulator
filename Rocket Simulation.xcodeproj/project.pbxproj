@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		490FABB921744BCD004CDA2C /* StageImg.swift in Sources */ = {isa = PBXBuildFile; fileRef = 490FABB821744BCD004CDA2C /* StageImg.swift */; };
 		49AB9E812159CA1D00C55A1E /* Stage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49AB9E802159CA1D00C55A1E /* Stage.swift */; };
 		49AB9E85215C0DB900C55A1E /* Bodies.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49AB9E84215C0DB900C55A1E /* Bodies.swift */; };
 		49B355CE213F5CDD0022C1BB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49B355CD213F5CDD0022C1BB /* AppDelegate.swift */; };
@@ -43,6 +44,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		490FABB821744BCD004CDA2C /* StageImg.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StageImg.swift; sourceTree = "<group>"; };
 		49AB9E802159CA1D00C55A1E /* Stage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Stage.swift; sourceTree = "<group>"; };
 		49AB9E84215C0DB900C55A1E /* Bodies.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bodies.swift; sourceTree = "<group>"; };
 		49B355CA213F5CDD0022C1BB /* Rocket Simulation.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Rocket Simulation.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -92,13 +94,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		49AB9E82215C0CEC00C55A1E /* Scenes */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Scenes;
-			sourceTree = "<group>";
-		};
 		49AB9E83215C0DA800C55A1E /* New Group */ = {
 			isa = PBXGroup;
 			children = (
@@ -131,7 +126,6 @@
 			isa = PBXGroup;
 			children = (
 				49AB9E83215C0DA800C55A1E /* New Group */,
-				49AB9E82215C0CEC00C55A1E /* Scenes */,
 				49B355CD213F5CDD0022C1BB /* AppDelegate.swift */,
 				49C59F60213F654E00CC9DFA /* Rocket */,
 				49B355CF213F5CDD0022C1BB /* GameScene.sks */,
@@ -172,6 +166,7 @@
 				49C59F61213F657100CC9DFA /* Part.swift */,
 				49C59F63213F657E00CC9DFA /* Rocket.swift */,
 				49AB9E802159CA1D00C55A1E /* Stage.swift */,
+				490FABB821744BCD004CDA2C /* StageImg.swift */,
 			);
 			path = Rocket;
 			sourceTree = "<group>";
@@ -312,6 +307,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				490FABB921744BCD004CDA2C /* StageImg.swift in Sources */,
 				49C59F64213F657E00CC9DFA /* Rocket.swift in Sources */,
 				49AB9E85215C0DB900C55A1E /* Bodies.swift in Sources */,
 				49B355D4213F5CDD0022C1BB /* GameScene.swift in Sources */,

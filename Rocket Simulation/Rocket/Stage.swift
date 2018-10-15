@@ -53,6 +53,10 @@ class Stage:NSObject, NSCoding{
         return tasks
     }
     
+    func getNext()->Stage?{
+        return self.nextStage
+    }
+    
     func deploy()->Stage?{
         for task in tasks{
             task.beginTask()
