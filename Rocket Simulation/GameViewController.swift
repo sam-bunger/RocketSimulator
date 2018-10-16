@@ -14,7 +14,6 @@ import GameplayKit
 class GameViewController: UIViewController {
     
     var usrTextField = UITextField()
-    var rocket:Rocket = Rocket()
     let defaults = UserDefaults.standard
     
     override func viewDidLoad() {
@@ -64,9 +63,7 @@ class GameViewController: UIViewController {
     
     func displayAlertAction(rocket:Rocket){
         
-        self.rocket = rocket
-        
-        let alertController = UIAlertController(title: "Enter Ship Name", message: nil, preferredStyle: .alert)
+        let alertController = UIAlertController(title: "Enter Rocket Name", message: nil, preferredStyle: .alert)
         alertController.addTextField(configurationHandler: usrTextField)
         
         let okAction = UIAlertAction(title: "OK", style: .default, handler: self.okHandler)
@@ -84,6 +81,7 @@ class GameViewController: UIViewController {
     }
     
     func okHandler(alert: UIAlertAction){
+        
         
         rocket.setName(name: usrTextField.text!)
         let num = defaults.integer(forKey: DefaultKeys.saveNum)

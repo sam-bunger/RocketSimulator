@@ -31,8 +31,11 @@ class BuildScene: SKScene{
     var list:[Part]
     
     //STAGE LIST
-    var stageImgs:[[StageImg]] = [[]]
-    var stageLength = CGFloat(0.0)
+    var stageImgs:[[SKSpriteNode]]
+    var stageLength:CGFloat
+    var selectedStage:StageImg? = nil
+    var newStage:SKSpriteNode? = nil
+    
     
     var itemMenuIsOpen = false
     var saveMenuIsOpen = false
@@ -165,7 +168,18 @@ class BuildScene: SKScene{
         self.selected = []
         self.notSelected = []
         self.list = []
+        //Stage Items
+        let fDiv = StageDiv(index: -1)
+        fDiv.position = CGPoint(x: gameArea.origin.x - 200, y: gameArea.size.height - (fDiv.size.height/2))
+        fDiv.zPosition = 100
+        fDiv.setScale(1)
+        self.stageImgs = [[fDiv]]
+        self.stageLength = fDiv.size.height
+        
         super.init(size: size)
+        
+        //add first divider
+        self.addChild(fDiv)
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -186,6 +200,18 @@ class BuildScene: SKScene{
             }
             
             if(stageMenuIsOpen){
+                //SELECT STAGE
+                for stage in stageImgs{
+                    for task in stage{
+                        if task is StageImg && task.contains(pointOfTouch){
+                            (task as? StageImg)?.updateOriginalPos();
+                            selectedStage = task as? StageImg
+                            selectedStage?.getPart().color = .green
+                            selectedStage?.getPart().colorBlendFactor = 0.6
+                        }
+                    }
+                }
+                //CLOSE
                 if(background.contains(pointOfTouch) && !itemsTab.contains(pointOfTouch)){
                     closeStageMenu()
                 }
@@ -206,7 +232,6 @@ class BuildScene: SKScene{
                 //SELECT ITEMS
                 for part: Part in notSelected{
                     if part.contains(pointOfTouch) && selected.isEmpty{
-                        print("prev deg: \(part.getDegree())")
                         if let p1 = part.getParent(){
                             let temp = part.select(i: p1.getDegree())
                             selected.append(contentsOf: temp)
@@ -214,18 +239,14 @@ class BuildScene: SKScene{
                                 notSelected.remove(at: notSelected.index(of:t)!)
                             }
                             part.breakConnection(part: p1)
-                            print("nonroot selected")
                         }else{
                             let temp = part.select(i: -1)
                             selected.append(contentsOf: temp)
                             for t:Part in temp{
                                 notSelected.remove(at: notSelected.index(of:t)!)
                             }
-                            print("root selected")
                         }
                         mainSelect = part
-                        print("next deg: \(part.getDegree())")
-                        print("----------------------")
                     }
                 }
             }
@@ -242,6 +263,36 @@ class BuildScene: SKScene{
             let amountDraggedY = pointOfTouch.y - previousPointOfTouch.y
             let amountDraggedX = pointOfTouch.x - previousPointOfTouch.x
             
+            //Allow selected stage to be moved
+            if selectedStage != nil{
+                let current = selectedStage!
+                current.move(x:amountDraggedX, y:amountDraggedY)
+                
+                //find where stage is being moved to
+                var taskFound = false;
+                for stage in stageImgs{
+                    for task in stage{
+                        if let t = task as? StageImg{
+                            if t.getIndex() == current.getIndex() {
+                                continue
+                            }
+                        }
+                        if task.contains(pointOfTouch){
+                            newStage = task
+                            taskFound = true;
+                            //Change task color
+                            task.color = .green
+                            task.colorBlendFactor = 0.5
+                        }else{
+                            task.colorBlendFactor = 0.0
+                        }
+                    }
+                }
+                if !taskFound{
+                    newStage = nil;
+                }
+            }
+            
             //Allow selected item(s) to be move
             if !selected.isEmpty{
                 for items:Part in selected{
@@ -254,6 +305,25 @@ class BuildScene: SKScene{
                 if let side = connectionReady[2] as? SKShapeNode{
                     side.position.x += amountDraggedX
                     side.position.y += amountDraggedY
+                }
+            }
+            
+            if(stageMenuIsOpen && selectedStage == nil){
+                let first = stageImgs.first!.first!
+                let last = stageImgs.last!.last!
+                let top = first.position.y - gameArea.size.height + (first.size.height/2) + amountDraggedY
+                let bot = last.position.y + gameArea.size.height - (last.size.height/2) + amountDraggedY
+                if((bot < gameArea.size.height && top > 0)){
+                    for stage in stageImgs{
+                        for task in stage{
+                            if let t = task as? StageImg{
+                                t.move(x: 0, y: amountDraggedY)
+                            }
+                            if let t = task as? StageDiv{
+                                t.move(x: 0, y: amountDraggedY)
+                            }
+                        }
+                    }
                 }
             }
             
@@ -333,8 +403,7 @@ class BuildScene: SKScene{
                 if(saveBut.contains(pointOfTouch)){
                     if let main = mainSelect, main.getDegree() == 0{
                         
-                        //let newRocket = Rocket(root: main)
-                       // gvc.displayAlertAction(rocket: newRocket)
+                        gvc.displayAlertAction(rocket: )
                     }
                 }
                 if(cancelBut.contains(pointOfTouch)){
@@ -344,7 +413,7 @@ class BuildScene: SKScene{
         }
         
         //DESELECTING ITEMS
-        if(!itemMenuIsOpen && !selected.isEmpty){
+        if(!itemMenuIsOpen && !stageMenuIsOpen && !selected.isEmpty){
             if connectionReady.isEmpty{
                 if mainSelect != nil{
                     for part:Part in selected{
@@ -373,7 +442,35 @@ class BuildScene: SKScene{
             selected.removeAll()
         }
         
-        updateStages()
+        if(stageMenuIsOpen && selectedStage != nil){
+            let s = selectedStage!
+            
+            if newStage != nil{
+                
+                newStage?.colorBlendFactor = 0.0
+
+                removeTask(task: s)
+                removeEmpty(idx: s.getIndex()+1)
+                
+                if let n = newStage as? StageImg{
+                    let i = n.getIndex() + 1
+                    let x = stageImgs[i].count - 2
+                    stageImgs[i].insert(s, at: x)
+                    updateIndex(from: n.getIndex())
+                }
+                
+                if let n = newStage as? StageDiv{
+                    addStage(s: s, at: n.getIndex()+1)
+                }
+                
+                
+                rebuildStage(offset: 200)
+            }else{
+                s.returnPos()
+            }
+            selectedStage?.getPart().colorBlendFactor = 0
+            selectedStage = nil
+        }
         
     }
     
@@ -382,8 +479,6 @@ class BuildScene: SKScene{
     }
     
     override func update(_ currentTime: TimeInterval) {
-        
-        print(itemMenuIsOpen)
         
         //Fade Effect on the Delete Button
         if !selected.isEmpty && delButFaded{
@@ -405,6 +500,18 @@ class BuildScene: SKScene{
         for part:Part in selected{
             part.update()
         }
+        
+        for stage in stageImgs{
+            for task in stage{
+                if let s = task as? StageImg{
+                    s.update()
+                }
+                if let s = task as? StageDiv{
+                    s.update()
+                }
+            }
+        }
+    
         
         if let main = mainSelect{
             for part:Part in notSelected{
@@ -470,7 +577,6 @@ class BuildScene: SKScene{
     }
     
     func openItemsMenu(){
-        print("open items")
         itemMenuIsOpen = true
         let moveRight = SKAction.moveBy(x: 400, y: 0, duration: 0.2)
         itemsTab.run(moveRight)
@@ -481,7 +587,6 @@ class BuildScene: SKScene{
     }
     
     func closeItemsMenu(){
-        print("close items")
         itemMenuIsOpen = false
         let moveLeft = SKAction.moveBy(x: -400, y: 0, duration: 0.2)
         itemsTab.run(moveLeft)
@@ -521,15 +626,18 @@ class BuildScene: SKScene{
     }
     
     func openStageMenu(){
-        print("stage open")
         stageMenuIsOpen = true
         let moveRight = SKAction.moveBy(x: 400, y: 0, duration: 0.2)
         itemsTab.run(moveRight)
         stagesBut.run(moveRight)
+        for stage in stageImgs{
+            for task in stage{
+                task.run(moveRight)
+            }
+        }
     }
     
     func closeStageMenu(){
-        print("stage close")
         stageMenuIsOpen = false
         let moveLeft = SKAction.moveBy(x: -400, y: 0, duration: 0.2)
         itemsTab.run(moveLeft)
@@ -559,54 +667,111 @@ class BuildScene: SKScene{
         
     }
     
+    func addStage(s:StageImg, at:Int){
+        
+        //create tempDiv
+        let tempDiv = StageDiv(index: at)
+        tempDiv.zPosition = 100
+        tempDiv.setScale(1)
+        self.addChild(tempDiv)
+        
+        //Update new stage
+        s.moveStage(i: at)
+        if at+1 < stageImgs.count{
+            stageImgs.insert([s, tempDiv], at: at+1)
+        }else{
+            stageImgs.append([s, tempDiv])
+        }
+        
+        updateIndex(from: at)
+        
+    }
+    
     func addStage(part:Part){
+        
         let x = gameArea.origin.x - 200
-        let c = stageImgs.count + 1
+        let c = stageImgs.count - 1
+        
+        //Create new content
+        let tempDiv = StageDiv(index: c)
         let tempPart = StageImg(index: c, part: part)
-        stageImgs.append([tempPart])
-        tempPart.position = CGPoint(x: x, y: stageLength)
-        stageLength += tempPart.size.height + 30
+        stageImgs.append([tempPart, tempDiv])
+        
+        //Place tempPart
+        tempPart.position = CGPoint(x: x, y: gameArea.size.height - (stageLength + tempPart.size.height/2))
+        tempPart.zPosition = 100
+        tempPart.setScale(1)
+        stageLength += tempPart.size.height
+        
+        //Place tempDiv
+        tempDiv.position = CGPoint(x: x, y: gameArea.size.height - (stageLength + tempDiv.size.height/2))
+        tempDiv.zPosition = 100
+        tempDiv.setScale(1)
+        stageLength += tempDiv.size.height
+        
+        
         self.addChild(tempPart)
+        self.addChild(tempDiv)
+    }
+    
+    func rebuildStage(offset:Int){
+        stageLength = 0
+        for stage in stageImgs{
+            for task in stage{
+                task.position = CGPoint(x: gameArea.origin.x + CGFloat(offset), y: gameArea.size.height - (stageLength + task.size.height/2))
+                stageLength += task.size.height
+            }
+        }
     }
     
     func removeStage(part:Part){
         
-        stageLength = 0
-        
-        for var stage in stageImgs{
-            for task in stage{
-                let a = stage.firstIndex(of: task)
-                if task.getPart().equals(part:part){
-                    task.removeFromParent()
-                    stage.remove(at: a!)
-                    if stage.count == 0{
-                        stageImgs.remove(at: stageImgs.firstIndex(of: stage)!)
-                    }
-                    continue
-                }
-                stageLength += task.size.height
-            }
-            stageLength += 30
-        }
-        
-    }
-    
-    func updateStages(){
-        
-        
-        
-    }
-    /*
-    func drawStageIcons(){
-        
         for stage in stageImgs{
             for task in stage{
-                self.addChild(task)
+                let a = stage.firstIndex(of: task)
+                let b = stageImgs.firstIndex(of: stage)
+                if let t = task as? StageImg, t.getPart().equals(part:part){
+                    t.removeFromParent()
+                    stageImgs[b!].remove(at: a!)
+                    //If there are no more tasks left in the stage delete the stage
+                    if stageImgs[b!].count == 1{
+                        stageImgs.remove(at: b!)
+                    }
+                }
+                updateIndex(from: 0)
             }
         }
- 
+        
+        rebuildStage(offset: -200)
     }
-    */
+    
+    func removeTask(task:StageImg){
+        let index = stageImgs[task.getIndex()+1].firstIndex(of: task)!
+        stageImgs[task.getIndex()+1].remove(at: index)
+    }
+    
+    func removeEmpty(idx: Int){
+        let stage = stageImgs[idx]
+        if stage.count == 1{
+            updateIndex(from: idx)
+            stageImgs[idx][0].removeFromParent()
+            stageImgs.remove(at: idx)
+        }
+        updateIndex(from: 0)
+    }
+    
+    func updateIndex(from:Int){
+        for i in from...stageImgs.count-1{
+            for task in stageImgs[i]{
+                if let t = task as? StageImg{
+                    t.moveStage(i:i-1)
+                }
+                if let t = task as? StageDiv{
+                    t.moveStage(i:i-1)
+                }
+            }
+        }
+    }
     
     
 }
