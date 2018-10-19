@@ -18,8 +18,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     var gameArea: CGRect
     let gvc:GameViewController
-    let buildLabel = SKLabelNode(fontNamed: "Japanese 3017")
-    let savesLabel = SKLabelNode(fontNamed: "Japanese 3017")
+    let buildLabel = SKLabelNode(fontNamed: "KoHo-Bold")
+    let savesLabel = SKLabelNode(fontNamed: "KoHo-Bold")
     
     override func didMove(to view: SKView) {
         self.physicsWorld.contactDelegate = self
@@ -109,8 +109,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     func toSavesMenu(){
-       // let changeSceneAction = SKAction.run {self.changeScene(scene: SavesScene(size: self.size, gvc: self.gvc), move: .right)}
-        //self.run(changeSceneAction)
+        let changeSceneAction = SKAction.run {self.changeScene(scene: SavesScene(size: self.size, gvc: self.gvc), move: .right)}
+        self.run(changeSceneAction)
     }
     
     func changeScene(scene: SKScene, move: SKTransitionDirection){

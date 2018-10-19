@@ -38,7 +38,7 @@ class Part:SKSpriteNode{
         self.tex = SKTexture(imageNamed: imageName)
         self.id = UUID().uuidString
         super.init(texture: tex, color: .clear, size: tex.size())
-        self.addChild(label)
+        //self.addChild(label)
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -56,7 +56,7 @@ class Part:SKSpriteNode{
         label.zPosition = 100
         label.color = UIColor.red
         super.init(texture: tex, color: .clear, size: tex.size())
-        self.addChild(label)
+        //self.addChild(label)
         
     }
     
@@ -110,6 +110,7 @@ class Part:SKSpriteNode{
         self.position = CGPoint(x: scene.size.width/2, y: scene.size.height/2)
     }
     
+    
     /* =====================================
      * ====== BUILDING FUNCTIONALITY =======
      * =====================================
@@ -136,6 +137,48 @@ class Part:SKSpriteNode{
             return i + 2
         }else{
             return i - 2
+        }
+    }
+    
+    func isConnected(part:Part)->Bool{
+        
+        for case let part? in connections{
+            if(part.degree > self.degree){
+                if part.equals(part: self){
+                    return true
+                }else{
+                    return self.isConnected(part: part)
+                }
+            }
+        }
+        
+        return false
+        
+    }
+    
+    func connectAdjParts(){
+        for case let part? in connections{
+            if(part.degree > self.degree){
+                part.removeFromParent()
+                self.addChild(part)
+                var x = 0
+                var y = 0
+                let index = self.getConnections().firstIndex(of: part)
+                switch index{
+                    case 0:
+                    y = 1; break
+                    case 1:
+                    x = 1; break
+                    case 2:
+                    y = -1; break
+                    default:
+                    x = -1; break
+                }
+                let xChange = (self.size.width/2) + (part.size.width/2)
+                let yChange = (self.size.height/2) + (part.size.height/2)
+                part.move(x: CGFloat(x)*xChange, y: CGFloat(y)*yChange)
+                part.connectAdjParts()
+            }
         }
     }
     
@@ -171,6 +214,16 @@ class Part:SKSpriteNode{
     
     func equals(part:Part)->Bool{
         return self.id == part.id
+    }
+    
+    func numParts()->Int{
+        var n = 1
+        for case let part? in connections{
+            if(part.degree > self.degree){
+                n += part.numParts()
+            }
+        }
+        return n
     }
     
     func getCorners()->[CGPoint]{
@@ -274,6 +327,51 @@ class Part:SKSpriteNode{
     
     func beginTask(){
         
+    }
+    
+    func newAnchor(point:CGPoint){
+        
+        self.anchorPoint = CGPoint(x: 0.5 + (point.x/self.size.width), y: 0.5 + (point.y/self.size.height))
+        
+        for case let part? in connections{
+            if part.degree > self.degree{
+                part.newAnchor(point: point)
+            }
+        }
+    
+        
+    }
+    
+    func getCenter()->CGPoint{
+        let temp = addPoints()
+        let num = CGFloat(numParts())
+        return CGPoint(x: temp.x/num, y:temp.y/num)
+    }
+    
+    func posRelativeToRoot()->CGPoint{
+        
+        var p = self.position
+        
+        if let part = getParent(){
+            let next = part.posRelativeToRoot()
+            p = CGPoint(x: p.x + next.x, y: p.y + next.y)
+        }
+        
+        return p
+        
+    }
+    
+    func addPoints()->CGPoint{
+        
+        var cPoint = self.posRelativeToRoot()
+        for case let part? in connections{
+            if part.degree > self.degree {
+                let point = part.addPoints()
+                cPoint = CGPoint(x:cPoint.x + point.x, y:cPoint.y + point.y)
+            }
+        }
+        
+        return cPoint
     }
  
 }

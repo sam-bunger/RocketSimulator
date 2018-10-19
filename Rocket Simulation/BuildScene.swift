@@ -250,6 +250,8 @@ class BuildScene: SKScene{
                     }
                 }
             }
+            
+            break
         }
         
     }
@@ -352,6 +354,8 @@ class BuildScene: SKScene{
                     saveButEnlarged = false
                 }
             }
+            
+            break
         }
     }
     
@@ -362,22 +366,24 @@ class BuildScene: SKScene{
             let pointOfTouch = touch.location(in: self)
             
             //SELECTING ITEMS IN ITEMS MENU
-            for part:Part in list{
-                if part.contains(pointOfTouch){
-                    if let obj = part as? Cockpit{
-                        let a = Cockpit(type: obj.getType())
-                        add(a: a)
-                    }else if let obj = part as? Engine{
-                        let a = Engine(type: obj.getType())
-                        add(a: a)
-                        addStage(part: a)
-                    }else if let obj = part as? Decoupler{
-                        let a = Decoupler(type: obj.getType())
-                        add(a: a)
-                        addStage(part: a)
+            if itemMenuIsOpen {
+                for part:Part in list{
+                    if part.contains(pointOfTouch){
+                        if let obj = part as? Cockpit{
+                            let a = Cockpit(type: obj.getType())
+                            add(a: a)
+                        }else if let obj = part as? Engine{
+                            let a = Engine(type: obj.getType())
+                            add(a: a)
+                            addStage(part: a)
+                        }else if let obj = part as? Decoupler{
+                            let a = Decoupler(type: obj.getType())
+                            add(a: a)
+                            addStage(part: a)
+                        }
+                        closeItemsMenu()
+                        break
                     }
-                    closeItemsMenu()
-                    break
                 }
             }
             
@@ -402,76 +408,79 @@ class BuildScene: SKScene{
             }else if(saveMenuIsOpen){
                 if(saveBut.contains(pointOfTouch)){
                     if let main = mainSelect, main.getDegree() == 0{
-                        
-                        gvc.displayAlertAction(rocket: )
+                        let newRocket = Rocket(root: main, stage: getStages(main: main))
+                        newRocket.connectParts()
+                        gvc.displayAlertAction(rocket: newRocket)
                     }
                 }
                 if(cancelBut.contains(pointOfTouch)){
                     closeSaveMenu()
                 }
             }
-        }
-        
-        //DESELECTING ITEMS
-        if(!itemMenuIsOpen && !stageMenuIsOpen && !selected.isEmpty){
-            if connectionReady.isEmpty{
-                if mainSelect != nil{
-                    for part:Part in selected{
-                        notSelected.append(part)
-                        part.zPosition = CGFloat(notSelected.count) + 1
-                    }
-                }
-            }else{
-                let a:Part = connectionReady[0] as! Part
-                if let main = mainSelect{
-                    main.makeConnection(part: a, at: connectionReady[3] as! Int, offset: 0)
-                    let directions = a.getSnapDist(main: main, dir: connectionReady[3] as! Int)
-                    for part:Part in selected{
-                        if a.alpha == 1 {
-                        }
-                        notSelected.append(part)
-                        part.zPosition = CGFloat(notSelected.count) + 1
-                        
-                        part.position.x += directions[0]
-                        part.position.y += directions[1]
-                        
-                    }
-                }
-            }
-            mainSelect = nil
-            selected.removeAll()
-        }
-        
-        if(stageMenuIsOpen && selectedStage != nil){
-            let s = selectedStage!
             
-            if newStage != nil{
-                
-                newStage?.colorBlendFactor = 0.0
-
-                removeTask(task: s)
-                removeEmpty(idx: s.getIndex()+1)
-                
-                if let n = newStage as? StageImg{
-                    let i = n.getIndex() + 1
-                    let x = stageImgs[i].count - 2
-                    stageImgs[i].insert(s, at: x)
-                    updateIndex(from: n.getIndex())
+            //DESELECTING ITEMS
+            if(!itemMenuIsOpen && !stageMenuIsOpen && !saveMenuIsOpen && !selected.isEmpty){
+                if connectionReady.isEmpty{
+                    if mainSelect != nil{
+                        for part:Part in selected{
+                            notSelected.append(part)
+                            part.zPosition = CGFloat(notSelected.count) + 1
+                        }
+                    }
+                }else{
+                    let a:Part = connectionReady[0] as! Part
+                    if let main = mainSelect{
+                        main.makeConnection(part: a, at: connectionReady[3] as! Int, offset: 0)
+                        let directions = a.getSnapDist(main: main, dir: connectionReady[3] as! Int)
+                        for part:Part in selected{
+                            if a.alpha == 1 {
+                            }
+                            notSelected.append(part)
+                            part.zPosition = CGFloat(notSelected.count) + 1
+                            
+                            part.position.x += directions[0]
+                            part.position.y += directions[1]
+                            
+                        }
+                    }
                 }
-                
-                if let n = newStage as? StageDiv{
-                    addStage(s: s, at: n.getIndex()+1)
-                }
-                
-                
-                rebuildStage(offset: 200)
-            }else{
-                s.returnPos()
+                mainSelect = nil
+                selected.removeAll()
             }
-            selectedStage?.getPart().colorBlendFactor = 0
-            selectedStage = nil
+            
+            if(stageMenuIsOpen && selectedStage != nil){
+                let s = selectedStage!
+                
+                if newStage != nil{
+                    
+                    newStage?.colorBlendFactor = 0.0
+                    
+                    removeTask(task: s)
+                    removeEmpty(idx: s.getIndex()+1)
+                    
+                    if let n = newStage as? StageImg{
+                        let i = n.getIndex() + 1
+                        let x = stageImgs[i].count - 2
+                        stageImgs[i].insert(s, at: x)
+                        updateIndex(from: n.getIndex())
+                    }
+                    
+                    if let n = newStage as? StageDiv{
+                        addStage(s: s, at: n.getIndex()+1)
+                    }
+                    
+                    
+                    rebuildStage(offset: 200)
+                }else{
+                    s.returnPos()
+                }
+                selectedStage?.getPart().colorBlendFactor = 0
+                selectedStage = nil
+                
+            }
+            
+            break
         }
-        
     }
     
     override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -725,7 +734,6 @@ class BuildScene: SKScene{
     }
     
     func removeStage(part:Part){
-        
         for stage in stageImgs{
             for task in stage{
                 let a = stage.firstIndex(of: task)
@@ -773,6 +781,36 @@ class BuildScene: SKScene{
         }
     }
     
+    func getStages(main:Part)->Stage{
+        
+        var currentStage:Stage? = nil
+        var head:Stage? = nil
+        
+        for stage in stageImgs{
+            var a:[Part] = []
+            for task in stage{
+                if let t = task as? StageImg { //, t.getPart().isConnected(part: main){
+                    a.append(t.getPart())
+                }
+            }
+            let temp = Stage(tasks: a)
+            if(currentStage == nil){
+                currentStage = temp
+                head = temp
+            }else{
+                currentStage!.setNext(next: temp)
+                currentStage = temp
+            }
+        }
+        
+        return head!
+        
+    }
+    
+    func toSavesMenu(){
+        let changeSceneAction = SKAction.run {self.changeScene(scene: SavesScene(size: self.size, gvc: self.gvc), move: .right)}
+        self.run(changeSceneAction)
+    }
     
 }
 

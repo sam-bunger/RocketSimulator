@@ -9,8 +9,19 @@
 /* Begin PBXBuildFile section */
 		490FABB921744BCD004CDA2C /* StageImg.swift in Sources */ = {isa = PBXBuildFile; fileRef = 490FABB821744BCD004CDA2C /* StageImg.swift */; };
 		490FABBC21753791004CDA2C /* StageDiv.swift in Sources */ = {isa = PBXBuildFile; fileRef = 490FABBB21753791004CDA2C /* StageDiv.swift */; };
+		490FABBE217704B1004CDA2C /* FlightScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 490FABBD217704B1004CDA2C /* FlightScene.swift */; };
+		490FABC0217705B3004CDA2C /* System.swift in Sources */ = {isa = PBXBuildFile; fileRef = 490FABBF217705B3004CDA2C /* System.swift */; };
+		490FABC221770604004CDA2C /* Orbital.swift in Sources */ = {isa = PBXBuildFile; fileRef = 490FABC121770604004CDA2C /* Orbital.swift */; };
+		490FABC721795740004CDA2C /* Map.swift in Sources */ = {isa = PBXBuildFile; fileRef = 490FABC621795740004CDA2C /* Map.swift */; };
+		490FABCC217962E1004CDA2C /* Vector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 490FABCB217962E1004CDA2C /* Vector.swift */; };
+		490FABCF217A68D2004CDA2C /* HUD.swift in Sources */ = {isa = PBXBuildFile; fileRef = 490FABCE217A68D2004CDA2C /* HUD.swift */; };
+		490FABD1217A7DAD004CDA2C /* KoHo-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 490FABD0217A7DAD004CDA2C /* KoHo-Light.ttf */; };
+		490FABD2217A7DAD004CDA2C /* KoHo-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 490FABD0217A7DAD004CDA2C /* KoHo-Light.ttf */; };
+		490FABD3217A7DAD004CDA2C /* KoHo-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 490FABD0217A7DAD004CDA2C /* KoHo-Light.ttf */; };
+		490FABD5217A7DBA004CDA2C /* KoHo-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 490FABD4217A7DBA004CDA2C /* KoHo-Bold.ttf */; };
+		490FABD6217A7DBA004CDA2C /* KoHo-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 490FABD4217A7DBA004CDA2C /* KoHo-Bold.ttf */; };
+		490FABD7217A7DBA004CDA2C /* KoHo-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 490FABD4217A7DBA004CDA2C /* KoHo-Bold.ttf */; };
 		49AB9E812159CA1D00C55A1E /* Stage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49AB9E802159CA1D00C55A1E /* Stage.swift */; };
-		49AB9E85215C0DB900C55A1E /* Bodies.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49AB9E84215C0DB900C55A1E /* Bodies.swift */; };
 		49B355CE213F5CDD0022C1BB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49B355CD213F5CDD0022C1BB /* AppDelegate.swift */; };
 		49B355D0213F5CDD0022C1BB /* GameScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = 49B355CF213F5CDD0022C1BB /* GameScene.sks */; };
 		49B355D2213F5CDD0022C1BB /* Actions.sks in Resources */ = {isa = PBXBuildFile; fileRef = 49B355D1213F5CDD0022C1BB /* Actions.sks */; };
@@ -47,8 +58,15 @@
 /* Begin PBXFileReference section */
 		490FABB821744BCD004CDA2C /* StageImg.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StageImg.swift; sourceTree = "<group>"; };
 		490FABBB21753791004CDA2C /* StageDiv.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StageDiv.swift; sourceTree = "<group>"; };
+		490FABBD217704B1004CDA2C /* FlightScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlightScene.swift; sourceTree = "<group>"; };
+		490FABBF217705B3004CDA2C /* System.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = System.swift; sourceTree = "<group>"; };
+		490FABC121770604004CDA2C /* Orbital.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Orbital.swift; sourceTree = "<group>"; };
+		490FABC621795740004CDA2C /* Map.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Map.swift; sourceTree = "<group>"; };
+		490FABCB217962E1004CDA2C /* Vector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Vector.swift; sourceTree = "<group>"; };
+		490FABCE217A68D2004CDA2C /* HUD.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HUD.swift; sourceTree = "<group>"; };
+		490FABD0217A7DAD004CDA2C /* KoHo-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "KoHo-Light.ttf"; sourceTree = "<group>"; };
+		490FABD4217A7DBA004CDA2C /* KoHo-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "KoHo-Bold.ttf"; sourceTree = "<group>"; };
 		49AB9E802159CA1D00C55A1E /* Stage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Stage.swift; sourceTree = "<group>"; };
-		49AB9E84215C0DB900C55A1E /* Bodies.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bodies.swift; sourceTree = "<group>"; };
 		49B355CA213F5CDD0022C1BB /* Rocket Simulation.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Rocket Simulation.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		49B355CD213F5CDD0022C1BB /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		49B355CF213F5CDD0022C1BB /* GameScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = GameScene.sks; sourceTree = "<group>"; };
@@ -105,12 +123,30 @@
 			path = "Stage Building";
 			sourceTree = "<group>";
 		};
-		49AB9E83215C0DA800C55A1E /* New Group */ = {
+		490FABC521795735004CDA2C /* HUD */ = {
 			isa = PBXGroup;
 			children = (
-				49AB9E84215C0DB900C55A1E /* Bodies.swift */,
+				490FABC621795740004CDA2C /* Map.swift */,
+				490FABCE217A68D2004CDA2C /* HUD.swift */,
 			);
-			path = "New Group";
+			path = HUD;
+			sourceTree = "<group>";
+		};
+		490FABCA21795DE1004CDA2C /* Helper */ = {
+			isa = PBXGroup;
+			children = (
+				490FABCB217962E1004CDA2C /* Vector.swift */,
+			);
+			path = Helper;
+			sourceTree = "<group>";
+		};
+		49AB9E83215C0DA800C55A1E /* Space */ = {
+			isa = PBXGroup;
+			children = (
+				490FABBF217705B3004CDA2C /* System.swift */,
+				490FABC121770604004CDA2C /* Orbital.swift */,
+			);
+			path = Space;
 			sourceTree = "<group>";
 		};
 		49B355C1213F5CDD0022C1BB = {
@@ -136,8 +172,10 @@
 		49B355CC213F5CDD0022C1BB /* Rocket Simulation */ = {
 			isa = PBXGroup;
 			children = (
+				490FABCA21795DE1004CDA2C /* Helper */,
+				490FABC521795735004CDA2C /* HUD */,
 				490FABBA21753754004CDA2C /* Stage Building */,
-				49AB9E83215C0DA800C55A1E /* New Group */,
+				49AB9E83215C0DA800C55A1E /* Space */,
 				49B355CD213F5CDD0022C1BB /* AppDelegate.swift */,
 				49C59F60213F654E00CC9DFA /* Rocket */,
 				49B355CF213F5CDD0022C1BB /* GameScene.sks */,
@@ -148,9 +186,12 @@
 				49C59F5C213F643400CC9DFA /* BuildScene.swift */,
 				49B355D5213F5CDD0022C1BB /* GameViewController.swift */,
 				49B355D7213F5CDD0022C1BB /* Main.storyboard */,
+				490FABD0217A7DAD004CDA2C /* KoHo-Light.ttf */,
+				490FABD4217A7DBA004CDA2C /* KoHo-Bold.ttf */,
 				49B355DA213F5CDF0022C1BB /* Assets.xcassets */,
 				49B355DC213F5CDF0022C1BB /* LaunchScreen.storyboard */,
 				49B355DF213F5CDF0022C1BB /* Info.plist */,
+				490FABBD217704B1004CDA2C /* FlightScene.swift */,
 			);
 			path = "Rocket Simulation";
 			sourceTree = "<group>";
@@ -289,8 +330,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				490FABD5217A7DBA004CDA2C /* KoHo-Bold.ttf in Resources */,
 				49B355D9213F5CDD0022C1BB /* Main.storyboard in Resources */,
 				49B355D0213F5CDD0022C1BB /* GameScene.sks in Resources */,
+				490FABD1217A7DAD004CDA2C /* KoHo-Light.ttf in Resources */,
 				49B355DB213F5CDF0022C1BB /* Assets.xcassets in Resources */,
 				49B355DE213F5CDF0022C1BB /* LaunchScreen.storyboard in Resources */,
 				49B355D2213F5CDD0022C1BB /* Actions.sks in Resources */,
@@ -301,6 +344,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				490FABD6217A7DBA004CDA2C /* KoHo-Bold.ttf in Resources */,
+				490FABD2217A7DAD004CDA2C /* KoHo-Light.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -308,6 +353,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				490FABD7217A7DBA004CDA2C /* KoHo-Bold.ttf in Resources */,
+				490FABD3217A7DAD004CDA2C /* KoHo-Light.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -320,12 +367,17 @@
 			files = (
 				490FABB921744BCD004CDA2C /* StageImg.swift in Sources */,
 				49C59F64213F657E00CC9DFA /* Rocket.swift in Sources */,
-				49AB9E85215C0DB900C55A1E /* Bodies.swift in Sources */,
+				490FABC221770604004CDA2C /* Orbital.swift in Sources */,
 				49B355D4213F5CDD0022C1BB /* GameScene.swift in Sources */,
 				490FABBC21753791004CDA2C /* StageDiv.swift in Sources */,
+				490FABCF217A68D2004CDA2C /* HUD.swift in Sources */,
+				490FABC0217705B3004CDA2C /* System.swift in Sources */,
 				49AB9E812159CA1D00C55A1E /* Stage.swift in Sources */,
+				490FABCC217962E1004CDA2C /* Vector.swift in Sources */,
 				49C59F5D213F643400CC9DFA /* BuildScene.swift in Sources */,
 				49B355D6213F5CDD0022C1BB /* GameViewController.swift in Sources */,
+				490FABBE217704B1004CDA2C /* FlightScene.swift in Sources */,
+				490FABC721795740004CDA2C /* Map.swift in Sources */,
 				49B355CE213F5CDD0022C1BB /* AppDelegate.swift in Sources */,
 				49C59F62213F657100CC9DFA /* Part.swift in Sources */,
 				49C59F5F213F644F00CC9DFA /* SaveScene.swift in Sources */,

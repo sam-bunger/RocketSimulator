@@ -13,70 +13,114 @@ class Rocket: NSObject, NSCoding{
     
     private struct Keys{
         static let Root = "root"
-        static let Size = "size"
         static let Name = "name"
         static let Stage = "currentStage"
     }
     
     private let root:Part
-    private var name:String
-    private var size:CGRect
+    private var givenName:String
     private var currentStage:Stage
     
     override init(){
         self.currentStage = Stage()
         self.root = Cockpit(type: 0)
-        self.name = "Untitled Rocket"
-        self.size = self.root.calculateAccumulatedFrame()
+        self.givenName = "Untitled Rocket"
     }
     
-    init(root:Part, name:String, stage:Stage){
+    init(root:Part, stage:Stage){
         self.root = root
-        self.name = name
-        self.size = CGRect(x: 0.0, y: 0.0, width: 0.0, height: 0.0)
+        self.givenName = ""
         self.currentStage = stage
         super.init()
-        self.size = getSize(root: self.root)
     }
     
-    func getSize(root:Part)->CGRect{
-        let rect = root.calculateAccumulatedFrame()
-        for case let part? in root.getConnections(){
-            return rect.union(getSize(root: part))
+    func getSize()->CGRect{
+        return getSize(last:root)
+    }
+    
+    func getSize(last:Part)->CGRect{
+        let rect = last.calculateAccumulatedFrame()
+        for case let part? in last.getConnections(){
+            if(part.getDegree() > last.getDegree()){
+                return rect.union(getSize(last: part))
+            }
         }
         return rect
     }
     
     func encode(with aCoder: NSCoder) {
         aCoder.encode(self.root, forKey: Keys.Root)
-        aCoder.encode(self.name, forKey: Keys.Name)
-        aCoder.encode(self.size, forKey: Keys.Size)
+        aCoder.encode(self.givenName, forKey: Keys.Name)
+        aCoder.encode(self.currentStage, forKey: Keys.Stage)
     }
     
     required init?(coder aDecoder: NSCoder) {
         self.root = aDecoder.decodeObject(forKey: Keys.Root) as! Part
-        self.name = aDecoder.decodeObject(forKey: Keys.Name) as! String
-        self.size = aDecoder.decodeObject(forKey: Keys.Size) as! CGRect
+        self.givenName = aDecoder.decodeObject(forKey: Keys.Name) as! String
         self.currentStage = aDecoder.decodeObject(forKey: Keys.Stage) as! Stage
         super.init()
     }
     
+    func add(scene:SKNode){
+        self.root.zPosition = 100
+        scene.addChild(self.root)
+    }
+    
+    func getRoot()->Part{
+        return root
+    }
+    
+    func clearParent(){
+        self.root.removeFromParent()
+    }
+    
     func setName(name:String){
-        self.name = name
+        self.givenName = name
     }
     
     func getName()->String{
-        return self.name
+        return self.givenName
+    }
+    
+    func connectParts(){
+        root.connectAdjParts()
+    }
+    
+    func scale(by:CGFloat){
+        self.root.setScale(by)
+    }
+    
+    func position(x:CGFloat, y:CGFloat){
+        self.root.position = CGPoint(x: x, y: y)
+    }
+    
+    func newAnchorPoint(point:CGPoint){
+        root.newAnchor(point: point)
+    }
+    
+    func setCenter(){
+        self.newAnchorPoint(point: self.getCenter())
+    }
+    
+    func getCenter()->CGPoint{
+        root.anchorPoint = CGPoint(x: 0.5, y: 0.5)
+        return root.getCenter()
     }
     
     /* ==================================== *
      * ======= FLIGHT FUNCTIONALITY ======= *
      * ==================================== */
     
+    func update(delta: CGFloat){
+        
+        
+    }
+    
     func stage(){
         if let stage = currentStage.deploy(){
             currentStage = stage
         }
     }
+
 
 }

@@ -11,11 +11,11 @@ import Foundation
 class Stage:NSObject, NSCoding{
     
     private struct Keys{
-        static var Next = "nextStage"
-        static var Tasks = "tasks"
+        static let Next = "nextStage"
+        static let Tasks = "tasks"
     }
     
-    private let nextStage:Stage?
+    private var nextStage:Stage?
     private var tasks:[Part]
     
     override init(){
@@ -27,6 +27,12 @@ class Stage:NSObject, NSCoding{
     init(next: Stage){
         self.nextStage = next
         tasks = []
+        super.init()
+    }
+    
+    init(tasks:[Part]){
+        self.tasks = tasks
+        self.nextStage = nil
         super.init()
     }
     
@@ -47,6 +53,10 @@ class Stage:NSObject, NSCoding{
     
     func removeTask(task:Part){
         tasks.remove(at: tasks.index(of: task)!)
+    }
+    
+    func setNext(next:Stage){
+        self.nextStage = next
     }
     
     func getTasks()->[Part]{
