@@ -15,7 +15,10 @@ class Map{
     private let system:System
     private var active:Bool
     private let cam:SKCameraNode
+    
+    //Zoom
     private var scaleNum:CGFloat = 50
+    private var previousScale:CGFloat = 1
 
 
     init(system:System, cam:SKCameraNode){
@@ -49,9 +52,12 @@ class Map{
     }
     
     func zoom(scale:CGFloat){
-        scaleNum *= (1/scale)
+        
+        let new = (1/scale)
+        
+        scaleNum *= new
         //Limit Scale
-        if scaleNum < 1 { scaleNum = 1 }
+        if scaleNum < 1 { scaleNum = 1}
         if scaleNum > 500000 { scaleNum = 500000 }
         
         //Update Camera Scale
@@ -59,9 +65,10 @@ class Map{
         
         //Scale Labels
         system.scaleLabel(scale: scaleNum)
-        
+        /*
         print("Recognizer scale: \(scale)")
         print("Camera scale: \(scaleNum)")
+        */
     }
     
     

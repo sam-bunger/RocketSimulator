@@ -43,11 +43,10 @@ class Vector{
     
     //STATIC FUNCS
     
-    static func getUnit(origin:CGPoint, dest:CGPoint)->Vector{
+    static func getUnit(point:CGPoint)->Vector{
         
-        let dist = CGPoint(x:(origin.x - dest.x), y:(origin.y - dest.y))
-        let magnitude = sqrt(pow(dist.x, 2) +  pow(dist.y, 2))
-        return Vector(magnitude: CGPoint(x: dist.x/magnitude,y: dist.y/magnitude))
+        let magnitude = sqrt(pow(point.x, 2) +  pow(point.y, 2))
+        return Vector(magnitude: CGPoint(x: point.x/magnitude,y: point.y/magnitude))
         
     }
     

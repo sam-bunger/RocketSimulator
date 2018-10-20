@@ -23,7 +23,6 @@ class FlightScene:SKScene{
     
     //Time Keeping
     var lastTime: TimeInterval = 0
-    var timeMultiplyer:CGFloat = 1
     
     override func didMove(to view: SKView) {
         // Add camera to view
@@ -46,7 +45,7 @@ class FlightScene:SKScene{
         self.rocket = rocket
         self.sol = System()
         self.cam = SKCameraNode()
-        self.hud = HUD(system: sol, cam: cam)
+        self.hud = HUD(system: sol, cam: cam, gameArea: gameArea)
         self.gvc = gvc
         
         super.init(size: size)
@@ -56,6 +55,9 @@ class FlightScene:SKScene{
         
         //Add system to view
         self.addChild(sol.getPrimaryNode())
+        
+        //Add Camera
+        self.addChild(cam)
 
     }
     
@@ -79,6 +81,19 @@ class FlightScene:SKScene{
         }
     }
     
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        
+        for touch: AnyObject in touches{
+            
+            //let pointOfTouch = touch.location(in: cam)
+            
+            hud.touchesEnded(touch: touch)
+            
+            break
+        }
+        
+    }
+    
     @objc func mapZoom(recognizer: UIPinchGestureRecognizer){
         if recognizer.state == .changed {
             hud.scaleMap(scale: recognizer.scale)
@@ -87,7 +102,7 @@ class FlightScene:SKScene{
     }
     
     override func update(_ currentTime: TimeInterval) {
-        let delta = timeMultiplyer*CGFloat(getDelta(currentTime: currentTime))
+        let delta = hud.getMultiplyer()*CGFloat(getDelta(currentTime: currentTime))
         
         sol.update(delta: delta)
         rocket.update(delta: delta)

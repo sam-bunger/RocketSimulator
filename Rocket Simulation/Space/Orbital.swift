@@ -37,9 +37,8 @@ class Body:SKSpriteNode{
         //Add Label
         label.text = objectName
         label.fontSize = 40
-        label.zPosition = 10
+        label.zPosition = 2
         self.addChild(label)
-        //label.position = CGPoint(x: 0, y: 0)
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -75,23 +74,27 @@ class Orbital:Body{
         self.orbitRadius = oR
         self.centralBody = cB
         super.init(name: name, mass: mass, radius: radius)
+        setInitalVelocity()
     }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func update(delta: TimeInterval){
-        let d = CGFloat(delta)
-        updateAccel(delta: d)
-        updateVel(delta: d)
-        updatePos(delta: d)
-        //print("\(self.objectName) pos: (\(self.position.x), \(self.position.y))" )
+    func update(delta: CGFloat){
+        updateAccel(delta: delta)
+        updateVel(delta: delta)
+        updatePos(delta: delta)
+        print("\(self.objectName) pos: (\(self.position.x), \(self.position.y))" )
+    }
+    
+    func setInitalVelocity(){
+        vel.add(x: 100, y: 0)
     }
     
     func updateAccel(delta:CGFloat){
-        accel = Vector.getUnit(origin: self.position, dest: centralBody.position)
-        let adg = (Const.G * (self.getMass() * centralBody.getMass()))/pow(orbitRadius, 2)
+        accel = Vector.getUnit(point: self.position)
+        let adg = (Const.G * (centralBody.getMass()))/pow(orbitRadius, 2)
         accel.applyMagnitude(mag: adg)
     }
     
@@ -101,7 +104,7 @@ class Orbital:Body{
     
     func updatePos(delta:CGFloat){
         let current = self.position
-        self.position = CGPoint(x: current.x + (vel.x() * delta), y: current.y + (vel.y() * delta))
+        self.position = CGPoint(x: current.x - (vel.x() * delta), y: current.y - (vel.y() * delta))
     }
     
     func initalPosition(){
