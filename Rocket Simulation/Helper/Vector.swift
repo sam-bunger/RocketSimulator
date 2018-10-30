@@ -11,43 +11,37 @@ import SpriteKit
 
 class Vector{
     
-    var magnitude:CGPoint
+    public var x:CGFloat
+    public var y:CGFloat
     
     init(magnitude: CGPoint){
-        self.magnitude = magnitude
+        self.x = magnitude.x
+        self.y = magnitude.y
     }
     
     init(){
-        magnitude = CGPoint(x: 0, y: 0)
-    }
-    
-    func x()->CGFloat{
-        return magnitude.x
-    }
-    
-    func y()->CGFloat{
-        return magnitude.y
+        self.x = 0
+        self.y = 0
     }
     
     func add(x:CGFloat, y:CGFloat){
-        magnitude.x += x
-        magnitude.y += y
+        self.x += x
+        self.y += y
     }
     
     func applyMagnitude(mag:CGFloat){
-        self.magnitude.x *= mag
-        self.magnitude.x *= mag
+        self.x *= mag
+        self.y *= mag
     }
     
-    
+    func toPoint()->CGPoint{
+        return CGPoint(x: x, y: y)
+    }
     
     //STATIC FUNCS
-    
     static func getUnit(point:CGPoint)->Vector{
-        
-        let magnitude = sqrt(pow(point.x, 2) +  pow(point.y, 2))
+        let magnitude = -1 * sqrt(pow(point.x, 2) +  pow(point.y, 2))
         return Vector(magnitude: CGPoint(x: point.x/magnitude,y: point.y/magnitude))
-        
     }
     
     

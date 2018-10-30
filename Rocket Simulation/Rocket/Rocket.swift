@@ -111,7 +111,7 @@ class Rocket: NSObject, NSCoding{
      * ======= FLIGHT FUNCTIONALITY ======= *
      * ==================================== */
     
-    func update(delta: CGFloat){
+    func update(delta: CGFloat, ct:CGFloat){
         
         
     }

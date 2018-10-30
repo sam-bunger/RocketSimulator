@@ -23,6 +23,7 @@ class FlightScene:SKScene{
     
     //Time Keeping
     var lastTime: TimeInterval = 0
+    var tCurrent:CGFloat = CGFloat(0)
     
     override func didMove(to view: SKView) {
         // Add camera to view
@@ -85,9 +86,9 @@ class FlightScene:SKScene{
         
         for touch: AnyObject in touches{
             
-            //let pointOfTouch = touch.location(in: cam)
+            let pointOfTouch = touch.location(in: self)
             
-            hud.touchesEnded(touch: touch)
+            hud.touchesEnded(touch: touch, mainPoint: pointOfTouch)
             
             break
         }
@@ -103,19 +104,17 @@ class FlightScene:SKScene{
     
     override func update(_ currentTime: TimeInterval) {
         let delta = hud.getMultiplyer()*CGFloat(getDelta(currentTime: currentTime))
+        tCurrent += delta
         
-        sol.update(delta: delta)
-        rocket.update(delta: delta)
+        sol.update(delta: delta, ct: tCurrent)
+        rocket.update(delta: delta, ct: tCurrent)
+        hud.update(delta: delta, ct: tCurrent)
 
     }
     
     private func getDelta(currentTime: TimeInterval)->TimeInterval{
         var delta: TimeInterval = currentTime - lastTime
         lastTime = currentTime
-        
-        if delta >= 1.0 {
-            delta = 1.0
-        }
         return delta
     }
     
