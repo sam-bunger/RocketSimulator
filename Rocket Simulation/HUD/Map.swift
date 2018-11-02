@@ -18,47 +18,51 @@ class Map{
     
     //Zoom
     private var scaleNum:CGFloat = 30000
-    private var previousScale:CGFloat = 1
     
     //Camera Lock
-    private var camLock:String
+    private var camLock:String =  "Earth"
+    
 
     init(system:System, cam:SKCameraNode){
         self.system = system
         self.active = true
         self.cam = cam
-        self.camLock = "Earth"
         
         cam.setScale(scaleNum)
         system.scaleLabel(scale: scaleNum)
+        
     }
     
-    func touchesEnded(touch: CGPoint){
+    func touchesBegan(touch: CGPoint){
+    
+    }
+    
+    func touchesEnded(touch: AnyObject){
         
-        for body in system.getBodies(){
-            //print("Body Pos: (\(body.position.x),\(body.position.y)))")
-            //print("body size: (\(body.size.width),\(body.size.height))")
-            //print("touch Pos: (\(touch.x),\(touch.y)))")
-            if(body.contains(touch)){
-                if let text = body.label.text{
-                    camLock = text
-                }
-            }
+        let body = system.getPrimaryNode() as! SKShapeNode
+        let point = touch.location(in: body.parent!)
+        let node = body.parent!.atPoint(point)
+        
+        if let name = node.name, system.has(body: name){
+            camLock = name
         }
         
     }
     
     func touchesMoved(x: CGFloat, y:CGFloat){
-        cam.position.x -= x
-        cam.position.y -= y
+
+        //print("Previois Position:" + cam.position.debugDescription)
+        //print("Position Change: (\(x), \(y))")
+        cam.position.x = cam.position.x - x
+        cam.position.y = cam.position.y - y
+        //print("New Position: " + cam.position.debugDescription)
+
     }
     
-    func update(delta:CGFloat, ct:CGFloat){
-        //print("CamLock: \(camLock)")
-        let v = system.pos(of:camLock)
-        //print("Vel: (\(v.x*delta),\(v.y*delta))")
-        cam.position.x = v.x
-        cam.position.y = v.y
+    func update(ct:CGFloat){
+        let v = system.vel(of: camLock)
+        cam.position.x += v.x
+        cam.position.y += v.y
     }
     
     func setCamPos(to: CGPoint){
@@ -83,8 +87,8 @@ class Map{
         
         scaleNum *= new
         //Limit Scale
-        if scaleNum < 10 { scaleNum = 10}
-        if scaleNum > 1000000000 { scaleNum = 1000000000 }
+        if scaleNum < 1 { scaleNum = 1}
+        if scaleNum > 100000000000 { scaleNum = 100000000000 }
         
         //Update Camera Scale
         cam.setScale(scaleNum)
@@ -93,7 +97,7 @@ class Map{
         system.scaleLabel(scale: scaleNum)
         
         //print("Recognizer scale: \(scale)")
-        //print("Camera scale: \(scaleNum)")
+        //print("Camera scale - round:\(round(scaleNum))   scale:\(scaleNum)")
         
     }
     

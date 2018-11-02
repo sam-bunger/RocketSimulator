@@ -22,7 +22,7 @@ class HUD{
     private let rightSkip = SKSpriteNode(imageNamed: "timeSkipRight")
     private let timeSkipBG = SKSpriteNode(imageNamed: "timeSkip")
     private var skipValue:CGFloat = 1
-    private var skipIndex:CGFloat = 10
+    private var skipIndex:CGFloat = 0
     private let skipLabel = SKLabelNode(fontNamed: "KoHo-Light")
     
     //Formatting
@@ -35,6 +35,7 @@ class HUD{
         self.map = Map(system: system, cam: cam)
         self.map.setCamPos(to: sol.pos(of: "Earth"))
         self.gameArea = gameArea
+        
         format()
     }
     
@@ -62,6 +63,10 @@ class HUD{
         
     }
     
+    func touchesBegan(touch: AnyObject, mainPoint: CGPoint){
+        map.touchesBegan(touch: mainPoint)
+    }
+    
     func touchesEnded(touch: AnyObject, mainPoint: CGPoint){
         
         let skip = touch.location(in: timeSkipBG)
@@ -78,7 +83,7 @@ class HUD{
             skipLeft()
         }
         
-        //map.touchesEnded(touch: mainPoint)
+        map.touchesEnded(touch: touch)
         
     }
     
@@ -90,8 +95,8 @@ class HUD{
 
     }
     
-    func update(delta:CGFloat, ct:CGFloat){
-        map.update(delta: delta, ct: ct)
+    func update(ct:CGFloat){
+        map.update(ct: ct)
     }
     
     func scaleMap(scale:CGFloat){
@@ -102,22 +107,24 @@ class HUD{
     
     func skipRight(){
         if skipValue < 10000000{
-            skipValue *= 25
-            skipIndex += 5
+            skipIndex += 1
+            skipValue = pow(8, skipIndex)
+            
         }
         updateSkipValue()
     }
     
     func skipLeft(){
         if skipValue > 1{
-            skipValue /= 25
-            skipIndex -= 5
+            skipIndex -= 1
+            skipValue = pow(8, skipIndex)
+            
         }
         updateSkipValue()
     }
     
     func updateSkipValue(){
-        skipLabel.text = "x\(skipValue)"
+        skipLabel.text = "x\(skipIndex)"
     }
     
     func getMultiplyer()->CGFloat{

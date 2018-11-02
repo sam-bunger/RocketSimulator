@@ -26,7 +26,14 @@ class FlightScene:SKScene{
     var tCurrent:CGFloat = CGFloat(0)
     
     override func didMove(to view: SKView) {
-        // Add camera to view
+        //Add rocket to camera
+        self.cam.addChild(rocket.getRoot())
+        
+        //Add system to view
+        self.addChild(sol.getPrimaryNode())
+        
+        //Add Camera
+        self.addChild(cam)
         self.camera = cam
         
         let mapZoom = UIPinchGestureRecognizer(target: self, action: #selector(mapZoom(recognizer:)))
@@ -50,20 +57,20 @@ class FlightScene:SKScene{
         self.gvc = gvc
         
         super.init(size: size)
-        
-        //Add rocket to camera
-        self.cam.addChild(rocket.getRoot())
-        
-        //Add system to view
-        self.addChild(sol.getPrimaryNode())
-        
-        //Add Camera
-        self.addChild(cam)
-
     }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        for touch: AnyObject in touches{
+            
+            let pointOfTouch = touch.location(in: self)
+
+            hud.touchesBegan(touch: touch, mainPoint: pointOfTouch)
+        
+        }
     }
     
     //USER INPUT
@@ -72,13 +79,15 @@ class FlightScene:SKScene{
             
             let pointOfTouch = touch.location(in: self)
             let previousPointOfTouch = touch.previousLocation(in: self)
+        
             
-            let amountDraggedY = pointOfTouch.y - previousPointOfTouch.y
-            let amountDraggedX = pointOfTouch.x - previousPointOfTouch.x
+            let amountDraggedY = (pointOfTouch.y - previousPointOfTouch.y)
+            let amountDraggedX = (pointOfTouch.x - previousPointOfTouch.x)
+            
+            cam.touchesMoved(touches, with: event)
             
             hud.touchesMoved(x: amountDraggedX, y: amountDraggedY)
             
-            break
         }
     }
     
@@ -108,12 +117,15 @@ class FlightScene:SKScene{
         
         sol.update(delta: delta, ct: tCurrent)
         rocket.update(delta: delta, ct: tCurrent)
-        hud.update(delta: delta, ct: tCurrent)
-
+        
+    }
+    
+    override func didFinishUpdate() {
+        hud.update(ct: tCurrent)
     }
     
     private func getDelta(currentTime: TimeInterval)->TimeInterval{
-        var delta: TimeInterval = currentTime - lastTime
+        let delta: TimeInterval = currentTime - lastTime
         lastTime = currentTime
         return delta
     }
