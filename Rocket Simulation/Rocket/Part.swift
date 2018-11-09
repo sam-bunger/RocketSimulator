@@ -25,6 +25,13 @@ class Part:SKSpriteNode{
     private var degree:Int
     private var offset:CGFloat
     private let tex:SKTexture
+    internal var mass = CGFloat(0)
+    
+    /** 0 - top
+      * 1 - right
+      * 2 - botom
+      * 3 - left
+     **/
     private var connections:[Part?] = [nil, nil, nil, nil]
     private var label:SKLabelNode
     
@@ -104,6 +111,10 @@ class Part:SKSpriteNode{
     
     func getType()->Int{
         return self.type
+    }
+    
+    func getMass()->CGFloat{
+        return mass
     }
     
     func center(scene: SKScene){
@@ -325,9 +336,7 @@ class Part:SKSpriteNode{
      * ======= FLIGHT FUNCTIONALITY ======= *
      * ==================================== */
     
-    func beginTask(){
-        
-    }
+    func beginTask(){}
     
     func newAnchor(point:CGPoint){
         
@@ -382,6 +391,7 @@ class Cockpit:Part{
         super.init(imageName: "cockpit\(type)", type: type)
         self.setScale(1)
         self.zPosition = 2
+        self.mass = 9_000
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -403,6 +413,7 @@ class Decoupler:Part{
         setStats(t: self.getType())
         self.setScale(1)
         self.zPosition = 2
+        self.mass = 500
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -411,7 +422,7 @@ class Decoupler:Part{
     }
     
     func setStats(t:Int){
-
+        
     }
     
     func getStageItem()->SKSpriteNode{
@@ -424,21 +435,18 @@ class Decoupler:Part{
     
 }
 
-class Engine:Part{
+class Fuel:Part{
     
-    private var fuel:Int
-    private let stageItem = SKSpriteNode(imageNamed: "engineStage");
+    private var fuel = CGFloat(0)
     
     init(type:Int){
-        self.fuel = 0
-        super.init(imageName: "engine\(type)", type: type)
+        super.init(imageName: "fuel\(type)", type: type)
         setStats(t: self.getType())
         self.setScale(1)
         self.zPosition = 2
     }
     
     required init?(coder aDecoder: NSCoder) {
-        self.fuel = 0
         super.init(coder: aDecoder)
         setStats(t: self.getType())
     }
@@ -446,13 +454,87 @@ class Engine:Part{
     func setStats(t:Int){
         switch t{
         case 1:
-            self.fuel = 1000
+            self.fuel = 100
+            self.mass = fuel*1000 + 1_000
             break
         case 2:
-            self.fuel = 10000
+            self.fuel = 1000
+            self.mass = fuel*1000 + 2_000
             break
         case 3:
-            self.fuel = 100000
+            self.fuel = 10000
+            self.mass = fuel*1000 + 4_000
+            break
+        default:
+            break
+        }
+    }
+    
+    func removeFuel(amount: CGFloat)->Bool{
+        if(self.fuel <= 0){
+            return false
+        }
+        if let con = self.getConnection(at: 0) as? Fuel{
+            return con.removeFuel(amount: amount)
+        }
+        
+        //calculate fuel
+        self.fuel -= amount
+        
+        //Recalculate Mass
+        switch self.getType(){
+            case 1:
+                self.mass = fuel*1000 + 1_000
+                break
+            case 2:
+                self.mass = fuel*1000 + 2_000
+                break
+            case 3:
+                self.mass = fuel*1000 + 4_000
+                break
+            default:
+                break
+        }
+        
+        return true
+    }
+    
+}
+
+
+class Engine:Part{
+    
+    //The amount of fuel an engine will use per game tic when the throttle is at 100%
+    private var fuelPerTic = CGFloat(0)
+    private var ignite = false
+    
+    private let stageItem = SKSpriteNode(imageNamed: "engineStage");
+    
+    init(type:Int){
+        super.init(imageName: "engine\(type)", type: type)
+        setStats(t: self.getType())
+        self.setScale(1)
+        self.zPosition = 2
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        setStats(t: self.getType())
+    }
+    
+    func setStats(t:Int){
+        switch t{
+        case 1:
+            self.fuelPerTic = 0.001
+            self.mass = 750
+            break
+        case 2:
+            self.fuelPerTic = 0.01
+            self.mass = 1_500
+            break
+        case 3:
+            self.fuelPerTic = 0.1
+            self.mass = 2_250
             break
         default:
             break
@@ -463,8 +545,22 @@ class Engine:Part{
         return stageItem
     }
     
-    override func beginTask(){
-        
+    override func beginTask() {
+        ignite = true
+    }
+    
+    func getThrust(throttle: CGFloat)->CGFloat{
+        if(ignite && removeFuel(throttle: throttle)){
+            return (1_000_000 * fuelPerTic) * throttle
+        }
+        return 0
+    }
+    
+    func removeFuel(throttle: CGFloat)->Bool{
+        if let con = self.getConnection(at: 0) as? Fuel{
+            return con.removeFuel(amount: self.fuelPerTic * throttle)
+        }
+        return false
     }
     
 }

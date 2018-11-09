@@ -59,9 +59,9 @@ class BuildScene: SKScene{
     let saveBut = SKShapeNode(rectOf: CGSize(width: 275, height: 150), cornerRadius: 10)
     let cancelBut = SKShapeNode(rectOf: CGSize(width: 275, height: 150), cornerRadius: 10)
     
-    let saveLabel = SKLabelNode(fontNamed: "Japanese 3017")
-    let saveButLabel = SKLabelNode(fontNamed: "Japanese 3017")
-    let cancelButLabel = SKLabelNode(fontNamed: "Japanese 3017")
+    let saveLabel = SKLabelNode(fontNamed: "KoHo-Bold")
+    let saveButLabel = SKLabelNode(fontNamed: "KoHo-Bold")
+    let cancelButLabel = SKLabelNode(fontNamed: "KoHo-Bold")
     
     let deleteTabScale = CGFloat(0.3)
     let saveTabScale = CGFloat(0.057)

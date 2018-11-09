@@ -29,10 +29,10 @@ class HUD{
     private let hudZ = CGFloat(10)
     
     
-    init(system:System, cam:SKCameraNode, gameArea:CGRect){
+    init(system:System, rocket:Rocket, cam:SKCameraNode, gameArea:CGRect){
         self.sol = system
         self.cam = cam
-        self.map = Map(system: system, cam: cam)
+        self.map = Map(system: system, cam: cam, rocket: rocket)
         self.map.setCamPos(to: sol.pos(of: "Earth"))
         self.gameArea = gameArea
         
@@ -60,7 +60,7 @@ class HUD{
         skipLabel.position = CGPoint(x: 0, y: -10)
         updateSkipValue()
         
-        
+        map.activate()
     }
     
     func touchesBegan(touch: AnyObject, mainPoint: CGPoint){
@@ -87,6 +87,14 @@ class HUD{
         
     }
     
+    func mapSet(on:Bool){
+        if(on){
+            map.activate()
+        }else{
+            map.deactivate()
+        }
+    }
+    
     func touchesMoved(x: CGFloat, y: CGFloat) {
         
         if(map.isActive()){
@@ -96,7 +104,9 @@ class HUD{
     }
     
     func update(ct:CGFloat){
-        map.update(ct: ct)
+        if(map.isActive()){
+            map.update(ct: ct)
+        }
     }
     
     func scaleMap(scale:CGFloat){

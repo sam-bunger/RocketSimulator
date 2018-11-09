@@ -24,7 +24,6 @@
 		49AB9E812159CA1D00C55A1E /* Stage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49AB9E802159CA1D00C55A1E /* Stage.swift */; };
 		49B355CE213F5CDD0022C1BB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49B355CD213F5CDD0022C1BB /* AppDelegate.swift */; };
 		49B355D0213F5CDD0022C1BB /* GameScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = 49B355CF213F5CDD0022C1BB /* GameScene.sks */; };
-		49B355D2213F5CDD0022C1BB /* Actions.sks in Resources */ = {isa = PBXBuildFile; fileRef = 49B355D1213F5CDD0022C1BB /* Actions.sks */; };
 		49B355D4213F5CDD0022C1BB /* GameScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49B355D3213F5CDD0022C1BB /* GameScene.swift */; };
 		49B355D6213F5CDD0022C1BB /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49B355D5213F5CDD0022C1BB /* GameViewController.swift */; };
 		49B355D9213F5CDD0022C1BB /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 49B355D7213F5CDD0022C1BB /* Main.storyboard */; };
@@ -70,7 +69,6 @@
 		49B355CA213F5CDD0022C1BB /* Rocket Simulation.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Rocket Simulation.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		49B355CD213F5CDD0022C1BB /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		49B355CF213F5CDD0022C1BB /* GameScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = GameScene.sks; sourceTree = "<group>"; };
-		49B355D1213F5CDD0022C1BB /* Actions.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = Actions.sks; sourceTree = "<group>"; };
 		49B355D3213F5CDD0022C1BB /* GameScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameScene.swift; sourceTree = "<group>"; };
 		49B355D5213F5CDD0022C1BB /* GameViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameViewController.swift; sourceTree = "<group>"; };
 		49B355D8213F5CDD0022C1BB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -176,22 +174,21 @@
 				490FABC521795735004CDA2C /* HUD */,
 				490FABBA21753754004CDA2C /* Stage Building */,
 				49AB9E83215C0DA800C55A1E /* Space */,
-				49B355CD213F5CDD0022C1BB /* AppDelegate.swift */,
 				49C59F60213F654E00CC9DFA /* Rocket */,
-				49B355CF213F5CDD0022C1BB /* GameScene.sks */,
-				49B355D1213F5CDD0022C1BB /* Actions.sks */,
-				49B355D3213F5CDD0022C1BB /* GameScene.swift */,
+				490FABBD217704B1004CDA2C /* FlightScene.swift */,
 				49C59F5E213F644F00CC9DFA /* SaveScene.swift */,
-				49B355EA213F5CDF0022C1BB /* Info.plist */,
+				49B355D3213F5CDD0022C1BB /* GameScene.swift */,
 				49C59F5C213F643400CC9DFA /* BuildScene.swift */,
 				49B355D5213F5CDD0022C1BB /* GameViewController.swift */,
+				49B355CD213F5CDD0022C1BB /* AppDelegate.swift */,
+				49B355EA213F5CDF0022C1BB /* Info.plist */,
+				49B355CF213F5CDD0022C1BB /* GameScene.sks */,
 				49B355D7213F5CDD0022C1BB /* Main.storyboard */,
 				490FABD0217A7DAD004CDA2C /* KoHo-Light.ttf */,
 				490FABD4217A7DBA004CDA2C /* KoHo-Bold.ttf */,
 				49B355DA213F5CDF0022C1BB /* Assets.xcassets */,
 				49B355DC213F5CDF0022C1BB /* LaunchScreen.storyboard */,
 				49B355DF213F5CDF0022C1BB /* Info.plist */,
-				490FABBD217704B1004CDA2C /* FlightScene.swift */,
 			);
 			path = "Rocket Simulation";
 			sourceTree = "<group>";
@@ -336,7 +333,6 @@
 				490FABD1217A7DAD004CDA2C /* KoHo-Light.ttf in Resources */,
 				49B355DB213F5CDF0022C1BB /* Assets.xcassets in Resources */,
 				49B355DE213F5CDF0022C1BB /* LaunchScreen.storyboard in Resources */,
-				49B355D2213F5CDD0022C1BB /* Actions.sks in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

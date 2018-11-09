@@ -23,9 +23,8 @@ class SavesScene: SKScene{
     
     //List Item Height
     let listItemHeight = CGFloat(500)
-
     
-    override func didMove(to view: SKView) {
+    override func didMove(to view: SKView){
         
         //BACKGROUND
         background.size = CGSize(width: self.size.width, height: self.size.height*1.1)
@@ -71,7 +70,6 @@ class SavesScene: SKScene{
     }
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-        
         for touch: AnyObject in touches{
             
             let pointOfTouch = touch.location(in: self)
@@ -80,15 +78,12 @@ class SavesScene: SKScene{
             
             for item in items{
                 if item.contains(pointOfTouch){
-                    rockets[i].clearParent()
+                    rockets[i].removeFromParent()
                     goToFlight(rocket: rockets[i])
                 }
                 i += 1
             }
-            
-            
         }
-        
     }
     
     func drawMenu(){
@@ -104,9 +99,11 @@ class SavesScene: SKScene{
             rocket.connectParts()
             let rect = rocket.getSize()
             rocket.setCenter()
-            rocket.position(x: gameArea.origin.x + (listItemHeight/2), y: gameArea.size.height - (listItemHeight*CGFloat(i)) - (listItemHeight/2))
-            rocket.scale(by: calculateScale(rect: rect))
-            rocket.add(scene:box)
+            rocket.position.x = gameArea.origin.x + (listItemHeight/2)
+            rocket.position.y = gameArea.size.height - (listItemHeight*CGFloat(i)) - (listItemHeight/2)
+            rocket.setScale(calculateScale(rect: rect))
+            box.addChild(rocket)
+            
             
             let name = SKLabelNode(text: rocket.getName())
             name.fontSize = 100

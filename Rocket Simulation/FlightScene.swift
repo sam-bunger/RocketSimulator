@@ -26,18 +26,19 @@ class FlightScene:SKScene{
     var tCurrent:CGFloat = CGFloat(0)
     
     override func didMove(to view: SKView) {
-        //Add rocket to camera
-        self.cam.addChild(rocket.getRoot())
         
+        super.didMove(to: view)
+    
         //Add system to view
         self.addChild(sol.getPrimaryNode())
-        
+    
         //Add Camera
         self.addChild(cam)
         self.camera = cam
         
         let mapZoom = UIPinchGestureRecognizer(target: self, action: #selector(mapZoom(recognizer:)))
-        self.view!.addGestureRecognizer(mapZoom)
+        view.addGestureRecognizer(mapZoom)
+        
     }
     
     init(size:CGSize, gvc: GameViewController, rocket: Rocket){
@@ -49,14 +50,17 @@ class FlightScene:SKScene{
         let margin = (size.width - playableWidth) / 2
         gameArea = CGRect(x: margin, y:0, width: playableWidth, height: size.height)
         
+        
         //Other Vars
         self.rocket = rocket
-        self.sol = System()
+        self.sol = System(rocket:rocket)
         self.cam = SKCameraNode()
-        self.hud = HUD(system: sol, cam: cam, gameArea: gameArea)
+        self.hud = HUD(system: sol, rocket: rocket, cam: cam, gameArea: gameArea)
         self.gvc = gvc
         
         super.init(size: size)
+        
+        hud.mapSet(on: true)
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -100,6 +104,7 @@ class FlightScene:SKScene{
             hud.touchesEnded(touch: touch, mainPoint: pointOfTouch)
             
             break
+            
         }
         
     }
@@ -117,6 +122,10 @@ class FlightScene:SKScene{
         
         sol.update(delta: delta, ct: tCurrent)
         rocket.update(delta: delta, ct: tCurrent)
+        
+    }
+    
+    override func didSimulatePhysics() {
         
     }
     

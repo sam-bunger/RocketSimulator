@@ -22,12 +22,15 @@ class Map{
     //Camera Lock
     private var camLock:String =  "Earth"
     
+    private let rocket:Rocket
+    
 
-    init(system:System, cam:SKCameraNode){
+    init(system:System, cam:SKCameraNode, rocket:Rocket){
+        
         self.system = system
         self.active = true
+        self.rocket = rocket
         self.cam = cam
-        
         cam.setScale(scaleNum)
         system.scaleLabel(scale: scaleNum)
         
@@ -50,13 +53,8 @@ class Map{
     }
     
     func touchesMoved(x: CGFloat, y:CGFloat){
-
-        //print("Previois Position:" + cam.position.debugDescription)
-        //print("Position Change: (\(x), \(y))")
-        cam.position.x = cam.position.x - x
-        cam.position.y = cam.position.y - y
-        //print("New Position: " + cam.position.debugDescription)
-
+        let newPoint = CGPoint(x: cam.position.x - x,y: cam.position.y - y)
+        cam.position = newPoint
     }
     
     func update(ct:CGFloat){
@@ -71,10 +69,14 @@ class Map{
     
     func activate(){
         self.active = true
+        rocket.getMapIco().isHidden = false
+        rocket.getRoot().isHidden = true
     }
     
     func deactivate(){
         self.active = false
+        rocket.getMapIco().isHidden = true
+        rocket.getRoot().isHidden = false
     }
     
     func isActive()->Bool{
@@ -84,20 +86,17 @@ class Map{
     func zoom(scale:CGFloat){
         
         let new = (1/scale)
-        
         scaleNum *= new
+        
         //Limit Scale
-        if scaleNum < 1 { scaleNum = 1}
-        if scaleNum > 100000000000 { scaleNum = 100000000000 }
+        if scaleNum < 0.00001 { scaleNum = 0.00001}
+        if scaleNum > 100000000000 { scaleNum = 100000000000}
         
         //Update Camera Scale
         cam.setScale(scaleNum)
         
         //Scale Labels
         system.scaleLabel(scale: scaleNum)
-        
-        //print("Recognizer scale: \(scale)")
-        //print("Camera scale - round:\(round(scaleNum))   scale:\(scaleNum)")
         
     }
     

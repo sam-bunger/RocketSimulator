@@ -11,17 +11,22 @@ import SpriteKit
 
 class System{
     
+    //Constant Bodies
     private let sun:Body
     private let earth:Orbital
     private let moon:Orbital
     
+    //Rocket
+    private let rocket:Rocket
+    
     //All bodies
     private var bodies:[Body] = []
     
-    init(){
+    init(rocket:Rocket){
         self.sun = Body(name: "Sun", mass: CGFloat(1.9891e30), radius: CGFloat(695000000), color: .orange)
         self.earth = Orbital(name: "Earth", color: .blue, mass: CGFloat(5.972e24), radius:CGFloat(6371000), a: CGFloat(149600000000), cB:sun, e: CGFloat(0.0167))
         self.moon = Orbital(name: "Moon", color: .gray, mass: CGFloat(7.34767e22), radius:CGFloat(1737000), a: CGFloat(238900000), cB:earth, e: CGFloat(0.0549))
+
         bodies.append(contentsOf: [sun, earth, moon])
         
         earth.addSatellite(orbital: moon)
@@ -30,6 +35,13 @@ class System{
         //Create Paths
         earth.drawPath(i:1000)
         moon.drawPath(i:1000)
+        
+        self.rocket = rocket
+        
+        //Value to set rocket to
+        earth.addChild(rocket)
+        rocket.position = CGPoint(x: 0.0, y: earth.radius)
+        
     }
     
     func getPrimaryNode()->SKNode{
@@ -86,6 +98,9 @@ class System{
     }
     
     func scaleLabel(scale:CGFloat){
+        
+        rocket.getMapIco().setScale(scale/2)
+        
         for body in bodies{
             
             //Change Label size

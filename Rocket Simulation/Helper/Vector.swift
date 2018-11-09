@@ -19,9 +19,22 @@ class Vector{
         self.y = magnitude.y
     }
     
+    init(x: CGFloat, y: CGFloat){
+        self.x = x
+        self.y = y
+    }
+    
     init(){
         self.x = 0
         self.y = 0
+    }
+    
+    func sub(_ v:Vector)->Vector{
+        return Vector(x: self.x-v.x, y: self.y-v.y)
+    }
+    
+    func mult(_ x:CGFloat)->Vector{
+        return Vector(x: self.x*x, y: self.y*x)
     }
     
     func add(x:CGFloat, y:CGFloat){
@@ -33,6 +46,15 @@ class Vector{
         self.x *= mag
         self.y *= mag
     }
+    
+    func mag()->CGFloat{
+        return sqrt(pow(x,2)+pow(y,2))
+    }
+    
+    func dot(_ v:Vector)->CGFloat{
+        return (self.x*v.x)+(self.y*v.y)
+    }
+    
     
     func toPoint()->CGPoint{
         return CGPoint(x: x, y: y)
